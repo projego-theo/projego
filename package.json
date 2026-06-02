@@ -7,7 +7,10 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint",
-    "generate:content": "npx tsx scripts/generateAllContent.ts"
+    "generate:content": "npx tsx scripts/generateAllContent.ts",
+    "generate:titles": "npx tsx scripts/generateBlogTitles.ts",
+    "publish:article": "npx tsx scripts/publishBlogArticle.ts",
+    "blog:weekly": "npx tsx scripts/weeklyBlogAutomation.ts"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.100.1",
@@ -26,6 +29,7 @@
     "eslint": "^9",
     "eslint-config-next": "16.2.6",
     "tailwindcss": "^4",
+    "tsx": "^4.22.4",
     "typescript": "^5"
   }
 }
