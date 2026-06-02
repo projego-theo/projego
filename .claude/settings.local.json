@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm run *)",
+      "Bash(python3 -c ' *)",
+      "Bash(npx next *)",
+      "Bash(sed -i '' '/bgImage=\"\\\\/69a21054581df_Capturedecran2026-02-27a22.42.46.png\"/d' /Users/theo/Documents/mon-site-web/app/permis-de-construire/page.tsx)",
+      "Bash(sed -i '' 's/section className=\"py-20 bg-\\\\[#f4f6f8\\\\]\"/section className=\"py-20 bg-transparent\"/g' /Users/theo/Documents/mon-site-web/app/permis-de-construire/page.tsx)",
+      "Bash(sed -i '' '/bgImage=\"\\\\/69a577618e65c_ChatGPTImage2mars202612_36_08.png\"/d' /Users/theo/Documents/mon-site-web/app/construction-maison-neuve/page.tsx)",
+      "Bash(sed -i '' 's/section className=\"py-20 bg-\\\\[#f4f6f8\\\\]\"/section className=\"py-20 bg-transparent\"/g' /Users/theo/Documents/mon-site-web/app/construction-maison-neuve/page.tsx)",
+      "Bash(sed -i '' '/bgImage=\"\\\\/69a5817b3f4ba_ChatGPTImage2mars202612_36_32.png\"/d' /Users/theo/Documents/mon-site-web/app/extension-maison/page.tsx)",
+      "Bash(sed -i '' 's/section className=\"py-20 bg-\\\\[#f4f6f8\\\\]\"/section className=\"py-20 bg-transparent\"/g' /Users/theo/Documents/mon-site-web/app/extension-maison/page.tsx)",
+      "Bash(sed -i '' '/bgImage=\"\\\\/69a577a4ee4a3_ChatGPTImage2mars202612_36_40.png\"/d' /Users/theo/Documents/mon-site-web/app/renovation-maison/page.tsx)",
+      "Bash(sed -i '' 's/section className=\"py-20 bg-\\\\[#f4f6f8\\\\]\"/section className=\"py-20 bg-transparent\"/g' /Users/theo/Documents/mon-site-web/app/renovation-maison/page.tsx)",
+      "Bash(sed -i '' '/bgImage=\"\\\\/69a2126908188_Capturedecran2026-02-27a22.52.17.png\"/d' /Users/theo/Documents/mon-site-web/app/maitrise-oeuvre/page.tsx)",
+      "Bash(sed -i '' '/bgImage=\"\\\\/69a2126908188_Capturedecran2026-02-27a22.52.17.png\"/d' /Users/theo/Documents/mon-site-web/app/suivi-de-chantier/page.tsx)",
+      "Bash(npx tsc *)",
+      "Bash(python3 *)",
+      "Skill(claude-api)",
+      "Bash(npm install *)",
+      "Bash(mkdir -p \"/Users/theo/Documents/mon-site-web/app/declaration-prealable/type/[type]\")",
+      "Bash(mkdir -p \"/Users/theo/Documents/mon-site-web/app/permis-de-construire/type/[type]\")",
+      "Bash(node *)"
+    ]
+  }
+}
