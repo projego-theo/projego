@@ -54,11 +54,7 @@ export async function getOrGenerateContent(
   const cached = readCache(cacheKey);
   if (cached) return cached;
 
-  if (process.env.VERCEL === '1') {
-    return fallback;
-  }
-
-  if (!process.env.ANTHROPIC_API_KEY) {
+  if (process.env.VERCEL === '1' || !process.env.ANTHROPIC_API_KEY || prompt === '' || prompt === undefined) {
     return fallback;
   }
 
