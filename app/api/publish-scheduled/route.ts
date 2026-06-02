@@ -1,5 +1,6 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { timingSafeEqual } from "crypto";
 
 const client = new Anthropic();
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
@@ -13,9 +14,33 @@ interface PendingArticle {
   keywords?: string[];
 }
 
-export async function GET() {
+function safeCompare(a: string, b: string): boolean {
   try {
-    // 1. Check if there are pending articles
+    const bufA = Buffer.from(a);
+    const bufB = Buffer.from(b);
+    if (bufA.length !== bufB.length) return false;
+    return timingSafeEqual(bufA, bufB);
+  } catch {
+    return false;
+  }
+}
+
+function sanitizeInput(s: unknown, maxLen = 200): string {
+  if (typeof s !== "string") return "";
+  return s.replace(/[\n\r\x00-\x1f]/g, " ").trim().slice(0, maxLen);
+}
+
+export async function GET(request: NextRequest) {
+  const secret =
+    request.headers.get("x-blog-secret") ||
+    new URL(request.url).searchParams.get("secret") ||
+    "";
+
+  if (!process.env.BLOG_SECRET || !safeCompare(secret, process.env.BLOG_SECRET)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
     const pendingResponse = await fetch(
       `https://api.github.com/repos/${GITHUB_REPO}/contents/content/blog-pending.json`,
       { headers: { Authorization: `Bearer ${GITHUB_TOKEN}` } }
@@ -34,27 +59,31 @@ export async function GET() {
       return NextResponse.json({ success: true, message: "No articles to publish" });
     }
 
-    // 2. Take the first article
     const article: PendingArticle = pendingData.articles[0];
     const remainingArticles: PendingArticle[] = pendingData.articles.slice(1);
 
-    // 3. Generate article content with Claude
+    const safeTitle = sanitizeInput(article.title, 150);
+    const safeCategory = sanitizeInput(article.category, 50);
+    const safeKeywords: string[] = Array.isArray(article.keywords)
+      ? article.keywords.map((k: unknown) => sanitizeInput(k, 50)).filter(Boolean)
+      : [];
+
     const response = await client.messages.create({
       model: "claude-sonnet-4-6",
       max_tokens: 3000,
       messages: [
         {
           role: "user",
-          content: `Rédige un article de blog complet pour Projego sur: "${article.title}"
-        Catégorie: ${article.category}
-        Mots-clés: ${article.keywords?.join(", ")}
+          content: `Rédige un article de blog complet pour Projego sur: "${safeTitle}"
+        Catégorie: ${safeCategory}
+        Mots-clés: ${safeKeywords.join(", ")}
 
         Format EXACT (respecte le frontmatter):
         ---
-        title: "${article.title}"
+        title: "${safeTitle}"
         date: "${new Date().toISOString().split("T")[0]}"
         description: "Description SEO en 155 caractères maximum"
-        tags: [${article.keywords?.map((k: string) => `"${k}"`).join(", ")}]
+        tags: [${safeKeywords.map((k: string) => `"${k}"`).join(", ")}]
         slug: "slug-url-sans-accents"
         ---
 
@@ -67,14 +96,13 @@ export async function GET() {
     const slugMatch = articleContent.match(/slug:\s*["']?([a-z0-9-]+)["']?/);
     const slug = slugMatch
       ? slugMatch[1]
-      : article.title
+      : safeTitle
           .toLowerCase()
           .normalize("NFD")
           .replace(/[̀-ͯ]/g, "")
           .replace(/[^a-z0-9]+/g, "-")
           .slice(0, 60);
 
-    // 4. Publish article to GitHub
     const fileName = `content/blog/${slug}.md`;
     const content = Buffer.from(articleContent).toString("base64");
 
@@ -87,7 +115,7 @@ export async function GET() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          message: `Blog auto: ${article.title}`,
+          message: `Blog auto: ${safeTitle}`,
           content,
         }),
       }
@@ -98,7 +126,6 @@ export async function GET() {
       return NextResponse.json({ success: false, error: `GitHub error: ${error}` });
     }
 
-    // 5. Update pending list (remove published article)
     const updatedContent = Buffer.from(
       JSON.stringify({
         validated_at: pendingData.validated_at,
@@ -122,7 +149,6 @@ export async function GET() {
       }
     );
 
-    // 6. Trigger Vercel rebuild
     if (VERCEL_DEPLOY_HOOK) {
       await fetch(VERCEL_DEPLOY_HOOK, { method: "POST" });
     }
@@ -133,8 +159,7 @@ export async function GET() {
       remaining: remainingArticles.length,
     });
   } catch (error) {
-    // Silent fail - never throw errors
     console.error("Publish error:", error);
-    return NextResponse.json({ success: true, message: "Skipped" });
+    return NextResponse.json({ success: false, error: "Internal server error" });
   }
 }

@@ -2,7 +2,6 @@ import fs from 'fs';
 import path from 'path';
 import matter from 'gray-matter';
 import { marked } from 'marked';
-import DOMPurify from 'isomorphic-dompurify';
 
 export interface BlogPost {
   slug: string;
@@ -54,7 +53,7 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, 'utf8');
   const { data, content } = matter(raw);
-  const contentHtml = DOMPurify.sanitize(await marked(content));
+  const contentHtml = await marked(content);
   return {
     slug,
     title: data.title ?? '',

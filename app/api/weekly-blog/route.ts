@@ -1,11 +1,32 @@
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import Anthropic from "@anthropic-ai/sdk";
+import { timingSafeEqual } from "crypto";
 
 const client = new Anthropic();
 const GHL_WEBHOOK =
   "https://services.leadconnectorhq.com/hooks/Sqd3WdWGgoefvce96mhp/webhook-trigger/4186ded7-6d96-4dfe-9906-2b7fb94d74c0";
 
-export async function GET() {
+function safeCompare(a: string, b: string): boolean {
+  try {
+    const bufA = Buffer.from(a);
+    const bufB = Buffer.from(b);
+    if (bufA.length !== bufB.length) return false;
+    return timingSafeEqual(bufA, bufB);
+  } catch {
+    return false;
+  }
+}
+
+export async function GET(request: NextRequest) {
+  const secret =
+    request.headers.get("x-blog-secret") ||
+    new URL(request.url).searchParams.get("secret") ||
+    "";
+
+  if (!process.env.BLOG_SECRET || !safeCompare(secret, process.env.BLOG_SECRET)) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
     const response = await client.messages.create({
       model: "claude-haiku-4-5-20251001",

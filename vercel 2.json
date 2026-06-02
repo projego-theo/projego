@@ -1,0 +1,16 @@
+{
+  "crons": [
+    {
+      "path": "/api/weekly-blog",
+      "schedule": "0 7 * * 1"
+    },
+    {
+      "path": "/api/publish-scheduled",
+      "schedule": "0 10 * * *"
+    },
+    {
+      "path": "/api/publish-scheduled",
+      "schedule": "0 16 * * *"
+    }
+  ]
+}

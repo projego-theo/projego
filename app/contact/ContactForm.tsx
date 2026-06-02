@@ -8,8 +8,7 @@ const serviceOptions = [
   { value: 'Espace Pro', label: 'Pour les Pros (Sous-traitance professionnelle)' },
 ];
 
-const WEBHOOK_URL =
-  'https://services.leadconnectorhq.com/hooks/Sqd3WdWGgoefvce96mhp/webhook-trigger/18940dc5-9d6b-4f6f-88d2-a87582431b46';
+const CONTACT_API = '/api/contact';
 
 export default function ContactForm() {
   const [submitted, setSubmitted] = useState(false);
@@ -34,7 +33,7 @@ export default function ContactForm() {
     };
 
     try {
-      const res = await fetch(WEBHOOK_URL, {
+      const res = await fetch(CONTACT_API, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload),
