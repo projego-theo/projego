@@ -6,6 +6,8 @@
  * Already-cached pages are skipped automatically.
  */
 
+import fs from 'fs';
+import path from 'path';
 import { generateBatch } from '../lib/generateContent';
 import { franceVilles } from '../lib/franceVilles';
 import { departements } from '../lib/departements';
@@ -13,6 +15,15 @@ import { proPages } from '../lib/proMetiers';
 import { dpTypes, pcTypes } from '../lib/workTypes';
 
 async function main() {
+  const generatedDir = path.join(process.cwd(), 'content', 'generated');
+  if (fs.existsSync(generatedDir)) {
+    const fileCount = fs.readdirSync(generatedDir).length;
+    if (fileCount > 100) {
+      console.log('Content already exists, skipping generation');
+      process.exit(0);
+    }
+  }
+
   console.log('=== Projego content pre-generation ===\n');
   console.log(`Total pages to process: ${
     franceVilles.length * 2 +
