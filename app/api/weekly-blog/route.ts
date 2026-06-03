@@ -42,6 +42,23 @@ const CATEGORIES = [
   },
 ];
 
+const FALLBACK_TITLES = [
+  { id: 1, title: "Quels travaux nécessitent une déclaration préalable ?", category: "declaration-prealable", keywords: ["déclaration préalable", "travaux", "permis"] },
+  { id: 2, title: "Piscine, pergola, clôture : quelle démarche administrative choisir ?", category: "declaration-prealable", keywords: ["piscine", "pergola", "clôture"] },
+  { id: 3, title: "Permis de construire : toutes les pièces obligatoires pour votre dossier", category: "permis-de-construire", keywords: ["permis de construire", "dossier", "pièces"] },
+  { id: 4, title: "Extension de maison : permis de construire ou déclaration préalable ?", category: "permis-de-construire", keywords: ["extension", "permis", "déclaration"] },
+  { id: 5, title: "Architecte ou maître d'œuvre : quelle différence pour vos travaux ?", category: "maitrise-oeuvre", keywords: ["architecte", "maître d'œuvre", "différence"] },
+  { id: 6, title: "Suivi de chantier : pourquoi confier votre projet à un maître d'œuvre ?", category: "maitrise-oeuvre", keywords: ["suivi de chantier", "maître d'œuvre", "coordination"] },
+  { id: 7, title: "Construction neuve en Vendée : quel budget au m² prévoir en 2024 ?", category: "construction-neuve", keywords: ["construction neuve", "budget", "Vendée"] },
+  { id: 8, title: "RE2020 : ce que la réglementation thermique change pour votre maison", category: "construction-neuve", keywords: ["RE2020", "réglementation thermique", "construction"] },
+  { id: 9, title: "Rénover ou agrandir : comment valoriser votre bien immobilier ?", category: "extension-renovation", keywords: ["rénovation", "extension", "valeur immobilière"] },
+  { id: 10, title: "MaPrimeRénov et CEE : toutes les aides pour financer votre rénovation", category: "extension-renovation", keywords: ["MaPrimeRénov", "CEE", "aides"] },
+  { id: 11, title: "Comment lire le PLU de votre commune avant de construire ?", category: "urbanisme-reglementation", keywords: ["PLU", "urbanisme", "construction"] },
+  { id: 12, title: "Certificat d'urbanisme : à quoi ça sert et comment l'obtenir ?", category: "urbanisme-reglementation", keywords: ["certificat d'urbanisme", "démarche", "terrain"] },
+  { id: 13, title: "Artisans BTP : pourquoi sous-traiter vos dossiers DP/PC à Projego ?", category: "espace-pro", keywords: ["artisans", "sous-traitance", "DP PC"] },
+  { id: 14, title: "De l'esquisse au plan AutoCAD : comment Projego accompagne les pros du bâtiment", category: "espace-pro", keywords: ["AutoCAD", "plans", "professionnels"] },
+];
+
 const GHL_WEBHOOK =
   "https://services.leadconnectorhq.com/hooks/Sqd3WdWGgoefvce96mhp/webhook-trigger/4186ded7-6d96-4dfe-9906-2b7fb94d74c0";
 
@@ -85,11 +102,19 @@ Réponds UNIQUEMENT avec un JSON array: [{"id":1,"title":"...","category":"id-de
       ],
     });
 
+    const rawText = (response.content[0] as { text: string }).text;
+    console.log("[weekly-blog] Claude raw response:", rawText);
+
     let titles;
     try {
-      titles = JSON.parse((response.content[0] as { text: string }).text);
-    } catch {
-      return NextResponse.json({ success: false, error: "Parse error" });
+      const cleaned = rawText
+        .replace(/^```(?:json)?\s*/i, "")
+        .replace(/\s*```\s*$/, "")
+        .trim();
+      titles = JSON.parse(cleaned);
+    } catch (parseError) {
+      console.error("[weekly-blog] JSON parse failed, using fallback titles. Error:", parseError);
+      titles = FALLBACK_TITLES;
     }
 
     const titlesText = titles
