@@ -3,8 +3,25 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import AnimatedSection from '@/components/AnimatedSection';
-import type { BlogPostMeta } from '@/lib/blog';
-import { formatDate } from '@/lib/blog';
+
+interface BlogPostMeta {
+  slug: string;
+  title: string;
+  date: string;
+  description: string;
+  tags: string[];
+}
+
+function formatDate(dateStr: string): string {
+  if (!dateStr) return '';
+  try {
+    const d = new Date(`${dateStr.split('T')[0]}T12:00:00`);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  } catch {
+    return '';
+  }
+}
 
 const FILTER_CATEGORIES = [
   'Déclaration Préalable',
