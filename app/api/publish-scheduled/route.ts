@@ -73,7 +73,7 @@ export async function GET(request: NextRequest) {
 
     // Generate title
     const titleResponse = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
+      model: process.env.CLAUDE_HAIKU_MODEL || "claude-haiku-4-5-20251001",
       max_tokens: 200,
       messages: [{
         role: "user",
@@ -89,7 +89,7 @@ export async function GET(request: NextRequest) {
 
     // Generate keywords
     const keywordsResponse = await client.messages.create({
-      model: "claude-haiku-4-5-20251001",
+      model: process.env.CLAUDE_HAIKU_MODEL || "claude-haiku-4-5-20251001",
       max_tokens: 100,
       messages: [{
         role: "user",
@@ -101,7 +101,7 @@ export async function GET(request: NextRequest) {
 
     // Generate full article
     const articleResponse = await client.messages.create({
-      model: "claude-sonnet-4-20250514",
+      model: process.env.CLAUDE_SONNET_MODEL || "claude-sonnet-4-6",
       max_tokens: 3000,
       messages: [{
         role: "user",
