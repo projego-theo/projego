@@ -6,6 +6,10 @@ const client = new Anthropic();
 const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_REPO = "projego-theo/projego";
 const VERCEL_DEPLOY_HOOK = process.env.VERCEL_DEPLOY_HOOK;
+const GITHUB_HEADERS = {
+  "Authorization": `Bearer ${GITHUB_TOKEN}`,
+  "Content-Type": "application/json",
+};
 
 function safeCompare(a: string, b: string): boolean {
   try {
@@ -60,6 +64,57 @@ const CATEGORIES = [
   },
 ];
 
+// Fetch existing blog slugs from GitHub
+async function fetchExistingSlugs(): Promise<string[]> {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/content/blog`,
+      { headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` } }
+    );
+    if (!res.ok) return [];
+    const files: { name: string }[] = await res.json();
+    return files
+      .filter((f) => f.name.endsWith('.md'))
+      .map((f) => f.name.replace(/\.md$/, ''));
+  } catch {
+    return [];
+  }
+}
+
+// Fetch title history from content/blog-history.json on GitHub
+async function fetchTitleHistory(): Promise<{ sha: string; titles: string[] }> {
+  try {
+    const res = await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/content/blog-history.json`,
+      { headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` } }
+    );
+    if (!res.ok) return { sha: '', titles: [] };
+    const data = await res.json();
+    const decoded = JSON.parse(Buffer.from(data.content, 'base64').toString('utf-8'));
+    return { sha: data.sha, titles: Array.isArray(decoded.titles) ? decoded.titles : [] };
+  } catch {
+    return { sha: '', titles: [] };
+  }
+}
+
+// Append the new title to blog-history.json on GitHub
+async function appendTitleHistory(title: string, existingSha: string, existingTitles: string[]) {
+  try {
+    const updatedTitles = [...existingTitles, title];
+    const body: Record<string, string> = {
+      message: `Blog history: ${title}`,
+      content: Buffer.from(JSON.stringify({ titles: updatedTitles }, null, 2)).toString('base64'),
+    };
+    if (existingSha) body.sha = existingSha;
+    await fetch(
+      `https://api.github.com/repos/${GITHUB_REPO}/contents/content/blog-history.json`,
+      { method: "PUT", headers: GITHUB_HEADERS, body: JSON.stringify(body) }
+    );
+  } catch (err) {
+    console.error('Failed to update blog-history.json:', err);
+  }
+}
+
 export async function GET(request: NextRequest) {
   const secret = request.nextUrl.searchParams.get('secret') || request.headers.get('x-blog-secret');
   if (!secret || !process.env.BLOG_SECRET || !safeCompare(secret, process.env.BLOG_SECRET)) {
@@ -71,6 +126,19 @@ export async function GET(request: NextRequest) {
     const dayOfWeek = new Date().getDay(); // 0=Sunday, 1=Monday...
     const category = CATEGORIES.find(c => c.day === dayOfWeek) || CATEGORIES[0];
 
+    // Fetch existing slugs and title history in parallel
+    const [existingSlugs, { sha: historySha, titles: historyTitles }] = await Promise.all([
+      fetchExistingSlugs(),
+      fetchTitleHistory(),
+    ]);
+
+    const existingContext = existingSlugs.length > 0
+      ? `\n\nArticles existants (évite des sujets similaires): ${existingSlugs.join(', ')}`
+      : '';
+    const historyContext = historyTitles.length > 0
+      ? `\n\nTitres déjà publiés (ne répète pas ces sujets): ${historyTitles.slice(-50).join(' | ')}`
+      : '';
+
     // Generate title
     const titleResponse = await client.messages.create({
       model: process.env.CLAUDE_HAIKU_MODEL || "claude-haiku-4-5-20251001",
@@ -79,8 +147,9 @@ export async function GET(request: NextRequest) {
         role: "user",
         content: `Génère UN titre d'article de blog accrocheur et SEO pour Projego (maîtrise d'œuvre et démarches administratives en Vendée) sur le thème: ${category.label}.
 
-        Sujets possibles: ${category.topics}
+        Sujets possibles: ${category.topics}${existingContext}${historyContext}
 
+        Génère un titre UNIQUE qui n'est pas déjà couvert par les articles existants.
         Réponds UNIQUEMENT avec le titre, rien d'autre, pas de guillemets, pas d'explication.`
       }]
     });
@@ -164,14 +233,8 @@ export async function GET(request: NextRequest) {
           `https://api.github.com/repos/${GITHUB_REPO}/contents/${newFileName}`,
           {
             method: "PUT",
-            headers: {
-              "Authorization": `Bearer ${GITHUB_TOKEN}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              message: `Blog auto: ${title}`,
-              content
-            })
+            headers: GITHUB_HEADERS,
+            body: JSON.stringify({ message: `Blog auto: ${title}`, content })
           }
         );
         if (!publishResponse.ok) {
@@ -185,14 +248,8 @@ export async function GET(request: NextRequest) {
           `https://api.github.com/repos/${GITHUB_REPO}/contents/${fileName}`,
           {
             method: "PUT",
-            headers: {
-              "Authorization": `Bearer ${GITHUB_TOKEN}`,
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify({
-              message: `Blog auto: ${title}`,
-              content
-            })
+            headers: GITHUB_HEADERS,
+            body: JSON.stringify({ message: `Blog auto: ${title}`, content })
           }
         );
         if (!publishResponse.ok) {
@@ -205,6 +262,9 @@ export async function GET(request: NextRequest) {
       console.error('GitHub error:', err);
       return NextResponse.json({ success: false, error: 'GitHub error' }, { status: 500 });
     }
+
+    // Append title to history (fire-and-forget)
+    appendTitleHistory(title, historySha, historyTitles);
 
     // Trigger Vercel rebuild
     if (VERCEL_DEPLOY_HOOK) {
