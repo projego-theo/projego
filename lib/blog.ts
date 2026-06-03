@@ -19,33 +19,29 @@ export interface BlogPostMeta {
   date: string;
   description: string;
   tags: string[];
-  excerpt: string;
 }
 
 const contentDir = path.join(process.cwd(), 'content', 'blog');
 
+// Converts gray-matter's date (string OR Date object) to a plain YYYY-MM-DD string
+function normalizeDate(raw: unknown): string {
+  if (!raw) return '';
+  if (raw instanceof Date) return isNaN(raw.getTime()) ? '' : raw.toISOString().split('T')[0];
+  const s = String(raw).trim();
+  // already an ISO string from JSON serialization
+  return s.includes('T') ? s.split('T')[0] : s;
+}
+
 export function formatDate(dateStr: string): string {
+  if (!dateStr) return '';
   try {
-    const d = new Date(dateStr);
+    // Append T12:00:00 so the date is interpreted in local time, not UTC midnight
+    const d = new Date(`${dateStr.split('T')[0]}T12:00:00`);
     if (isNaN(d.getTime())) return '';
     return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
   } catch {
     return '';
   }
-}
-
-function stripMarkdown(md: string): string {
-  return md
-    .replace(/^---[\s\S]*?---/, '')
-    .replace(/^#+\s+/gm, '')
-    .replace(/\*\*(.+?)\*\*/g, '$1')
-    .replace(/\*(.+?)\*/g, '$1')
-    .replace(/\[(.+?)\]\(.+?\)/g, '$1')
-    .replace(/`(.+?)`/g, '$1')
-    .replace(/^\s*[-*+]\s+/gm, '')
-    .replace(/^\s*\d+\.\s+/gm, '')
-    .replace(/\n+/g, ' ')
-    .trim();
 }
 
 export function getAllPostSlugs(): string[] {
@@ -61,16 +57,14 @@ export function getAllPostsMeta(): BlogPostMeta[] {
   return slugs
     .map((slug) => {
       const filePath = path.join(contentDir, `${slug}.md`);
-      const raw = fs.readFileSync(filePath, 'utf8');
-      const { data, content } = matter(raw.trimStart());
-      const excerpt = stripMarkdown(content).slice(0, 150);
+      const fileContents = fs.readFileSync(filePath, 'utf8');
+      const { data } = matter(fileContents.trimStart());
       return {
         slug,
-        title: data.title ?? '',
-        date: data.date ?? '',
-        description: data.description ?? '',
-        tags: data.tags ?? [],
-        excerpt,
+        title: String(data.title ?? ''),
+        date: normalizeDate(data.date),
+        description: String(data.description ?? ''),
+        tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
       };
     })
     .sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -79,20 +73,24 @@ export function getAllPostsMeta(): BlogPostMeta[] {
 export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const filePath = path.join(contentDir, `${slug}.md`);
   if (!fs.existsSync(filePath)) return null;
-  const raw = fs.readFileSync(filePath, 'utf8');
-  // trimStart so gray-matter detects --- even if Claude prepended whitespace/newlines
-  const { data, content } = matter(raw.trimStart());
-  // Strip any residual frontmatter block gray-matter may have missed
+
+  const fileContents = fs.readFileSync(filePath, 'utf8');
+  // trimStart so gray-matter finds --- even if Claude prepended whitespace/newlines
+  const { data, content } = matter(fileContents.trimStart());
+
+  // Belt-and-suspenders: strip any residual frontmatter gray-matter may have missed
   const body = content.trimStart().startsWith('---')
     ? content.replace(/^---[\s\S]*?---\s*\n?/, '').trimStart()
     : content.trimStart();
+
   const contentHtml = DOMPurify.sanitize(await marked(body));
+
   return {
     slug,
-    title: data.title ?? '',
-    date: data.date ?? '',
-    description: data.description ?? '',
-    tags: data.tags ?? [],
+    title: String(data.title ?? ''),
+    date: normalizeDate(data.date),
+    description: String(data.description ?? ''),
+    tags: Array.isArray(data.tags) ? data.tags.map(String) : [],
     contentHtml,
   };
 }
