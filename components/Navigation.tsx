@@ -147,18 +147,11 @@ export default function Navigation() {
                       <div className="flex items-center justify-between">
                         <Link href="/espace-pro" className="flex items-center gap-2 text-sm font-semibold text-[#29abe2] hover:text-[#1a9fd6] transition-colors">
                           <span className="text-xs bg-[#29abe2]/10 text-[#29abe2] px-2 py-0.5 rounded-full font-bold">PRO</span>
-                          Pour les Pros — Sous-traitance DP/PC &amp; plans AutoCAD
+                          Pour les Pros — Sous-traitance DP/PC &amp; Plans
                           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                           </svg>
                         </Link>
-                        <div className="flex gap-2">
-                          <Link href="/pro/declaration-prealable-menuisier" className="text-xs text-gray-400 hover:text-[#29abe2] transition-colors">Menuisier</Link>
-                          <span className="text-gray-300">·</span>
-                          <Link href="/pro/declaration-prealable-pisciniste" className="text-xs text-gray-400 hover:text-[#29abe2] transition-colors">Pisciniste</Link>
-                          <span className="text-gray-300">·</span>
-                          <Link href="/pro/declaration-prealable-macon" className="text-xs text-gray-400 hover:text-[#29abe2] transition-colors">Maçon</Link>
-                        </div>
                       </div>
                     </div>
                   </motion.div>
