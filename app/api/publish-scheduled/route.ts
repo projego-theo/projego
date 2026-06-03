@@ -19,6 +19,14 @@ function safeCompare(a: string, b: string): boolean {
   }
 }
 
+function cleanArticleContent(content: string): string {
+  return content
+    .replace(/^```(?:yaml|markdown|md)?\n(---[\s\S]*?---)\n```/m, '$1')
+    .replace(/^```(?:yaml|markdown|md)?\n/m, '')
+    .replace(/^```\n/m, '')
+    .trim();
+}
+
 const CATEGORIES = [
   {
     day: 1, // Monday
@@ -204,7 +212,7 @@ export async function GET(request: NextRequest) {
       }]
     });
 
-    const articleContent = (articleResponse.content[0] as any).text;
+    const articleContent = cleanArticleContent((articleResponse.content[0] as any).text);
 
     // Extract slug safely
     const slugMatch = articleContent.match(/slug:\s*["']?([a-z0-9-]+)["']?/);
