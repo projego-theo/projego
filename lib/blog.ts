@@ -53,8 +53,11 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const filePath = path.join(contentDir, `${slug}.md`);
   if (!fs.existsSync(filePath)) return null;
   const raw = fs.readFileSync(filePath, 'utf8');
-  const { data, content } = matter(raw);
-  const contentHtml = DOMPurify.sanitize(await marked(content));
+  // trimStart so gray-matter detects --- even if Claude prepended whitespace/newlines
+  const { data, content } = matter(raw.trimStart());
+  // Belt-and-suspenders: strip any residual frontmatter block gray-matter may have missed
+  const body = content.replace(/^\s*---[\s\S]*?---[ \t]*(\r?\n|$)/, '').trimStart();
+  const contentHtml = DOMPurify.sanitize(await marked(body));
   return {
     slug,
     title: data.title ?? '',
