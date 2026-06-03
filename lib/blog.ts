@@ -19,9 +19,34 @@ export interface BlogPostMeta {
   date: string;
   description: string;
   tags: string[];
+  excerpt: string;
 }
 
 const contentDir = path.join(process.cwd(), 'content', 'blog');
+
+export function formatDate(dateStr: string): string {
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  } catch {
+    return '';
+  }
+}
+
+function stripMarkdown(md: string): string {
+  return md
+    .replace(/^---[\s\S]*?---/, '')
+    .replace(/^#+\s+/gm, '')
+    .replace(/\*\*(.+?)\*\*/g, '$1')
+    .replace(/\*(.+?)\*/g, '$1')
+    .replace(/\[(.+?)\]\(.+?\)/g, '$1')
+    .replace(/`(.+?)`/g, '$1')
+    .replace(/^\s*[-*+]\s+/gm, '')
+    .replace(/^\s*\d+\.\s+/gm, '')
+    .replace(/\n+/g, ' ')
+    .trim();
+}
 
 export function getAllPostSlugs(): string[] {
   if (!fs.existsSync(contentDir)) return [];
@@ -37,13 +62,15 @@ export function getAllPostsMeta(): BlogPostMeta[] {
     .map((slug) => {
       const filePath = path.join(contentDir, `${slug}.md`);
       const raw = fs.readFileSync(filePath, 'utf8');
-      const { data } = matter(raw);
+      const { data, content } = matter(raw.trimStart());
+      const excerpt = stripMarkdown(content).slice(0, 150);
       return {
         slug,
         title: data.title ?? '',
         date: data.date ?? '',
         description: data.description ?? '',
         tags: data.tags ?? [],
+        excerpt,
       };
     })
     .sort((a, b) => (a.date < b.date ? 1 : -1));
@@ -55,8 +82,10 @@ export async function getPostBySlug(slug: string): Promise<BlogPost | null> {
   const raw = fs.readFileSync(filePath, 'utf8');
   // trimStart so gray-matter detects --- even if Claude prepended whitespace/newlines
   const { data, content } = matter(raw.trimStart());
-  // Belt-and-suspenders: strip any residual frontmatter block gray-matter may have missed
-  const body = content.replace(/^\s*---[\s\S]*?---[ \t]*(\r?\n|$)/, '').trimStart();
+  // Strip any residual frontmatter block gray-matter may have missed
+  const body = content.trimStart().startsWith('---')
+    ? content.replace(/^---[\s\S]*?---\s*\n?/, '').trimStart()
+    : content.trimStart();
   const contentHtml = DOMPurify.sanitize(await marked(body));
   return {
     slug,

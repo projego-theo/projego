@@ -5,6 +5,16 @@ import Link from 'next/link';
 import AnimatedSection from '@/components/AnimatedSection';
 import type { BlogPostMeta } from '@/lib/blog';
 
+function formatDate(dateStr: string): string {
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return '';
+    return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
+  } catch {
+    return '';
+  }
+}
+
 export default function BlogClient({ posts }: { posts: BlogPostMeta[] }) {
   const allTags = Array.from(new Set(posts.flatMap((p) => p.tags)));
   const [selectedTag, setSelectedTag] = useState('Tous');
@@ -55,27 +65,35 @@ export default function BlogClient({ posts }: { posts: BlogPostMeta[] }) {
             {filteredPosts.map((post, i) => (
               <AnimatedSection key={post.slug} delay={i * 0.07}>
                 <Link href={`/blog/${post.slug}`} className="group block h-full">
-                  <article className="h-full border border-gray-100 rounded-2xl overflow-hidden hover:shadow-xl transition-all">
-                    <div className="h-2 bg-gradient-to-r from-[#29abe2] to-[#1a9fd6]" />
-                    <div className="p-7">
-                      <div className="flex flex-wrap gap-1.5 mb-4">
-                        {post.tags.map((tag) => (
-                          <span key={tag} className="text-xs bg-[#29abe2]/10 text-[#29abe2] px-2.5 py-0.5 rounded-full">
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <h2 className="font-bold text-[#3d3d3d] text-lg group-hover:text-[#29abe2] transition-colors mb-3 line-clamp-2">
+                  <article className="h-full flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-200">
+                    <div className="h-1.5 bg-gradient-to-r from-[#29abe2] to-[#1a9fd6]" />
+                    <div className="flex flex-col flex-1 p-6">
+                      {/* Category badge */}
+                      {post.tags[0] && (
+                        <span className="self-start text-xs bg-[#29abe2]/10 text-[#29abe2] px-3 py-1 rounded-full font-semibold mb-3">
+                          {post.tags[0]}
+                        </span>
+                      )}
+
+                      {/* Title */}
+                      <h2 className="font-bold text-[#3d3d3d] text-xl leading-snug group-hover:text-[#29abe2] transition-colors mb-3 line-clamp-2">
                         {post.title}
                       </h2>
-                      <p className="text-gray-500 text-sm leading-relaxed line-clamp-4 mb-5">
-                        {post.description}
+
+                      {/* Excerpt */}
+                      <p className="text-gray-500 text-sm leading-relaxed flex-1 line-clamp-3 mb-5">
+                        {post.excerpt || post.description}
+                        {(post.excerpt || post.description) ? '…' : ''}
                       </p>
-                      <div className="flex items-center justify-between pt-4 border-t border-gray-100">
+
+                      {/* Footer */}
+                      <div className="flex items-center justify-between pt-4 border-t border-gray-100 mt-auto">
                         <time className="text-xs text-gray-400">
-                          {new Date(post.date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}
+                          {formatDate(post.date)}
                         </time>
-                        <span className="text-[#29abe2] text-sm font-semibold group-hover:underline">Lire →</span>
+                        <span className="text-[#29abe2] text-sm font-semibold group-hover:underline whitespace-nowrap">
+                          Lire l&apos;article →
+                        </span>
                       </div>
                     </div>
                   </article>

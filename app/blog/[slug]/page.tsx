@@ -1,7 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
-import { getAllPostSlugs, getPostBySlug, getAllPostsMeta } from '@/lib/blog';
+import { getAllPostSlugs, getPostBySlug, getAllPostsMeta, formatDate } from '@/lib/blog';
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -65,7 +65,7 @@ export default async function BlogPostPage({ params }: Params) {
               <span>Équipe Projego</span>
             </div>
             <span>·</span>
-            <time>{new Date(post.date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'long', day: 'numeric' })}</time>
+            <time>{formatDate(post.date)}</time>
           </div>
         </header>
 
