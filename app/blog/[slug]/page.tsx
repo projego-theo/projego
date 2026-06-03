@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getAllPostSlugs, getPostBySlug, getAllPostsMeta, formatDate } from '@/lib/blog';
+import ShareButtons from './ShareButtons';
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -103,7 +104,9 @@ export default async function BlogPostPage({ params }: Params) {
           </div>
         )}
 
-        <div className="mt-10 pt-6 border-t border-gray-100">
+        <ShareButtons title={post.title} slug={slug} />
+
+        <div className="mt-8">
           <Link href="/blog" className="text-[#29abe2] font-semibold text-sm hover:text-[#1a9fd6] transition-colors">
             ← Retour au blog
           </Link>

@@ -4,17 +4,7 @@ import { useState } from 'react';
 import Link from 'next/link';
 import AnimatedSection from '@/components/AnimatedSection';
 import type { BlogPostMeta } from '@/lib/blog';
-
-function formatDate(dateStr: string): string {
-  if (!dateStr) return '';
-  try {
-    const d = new Date(`${dateStr.split('T')[0]}T12:00:00`);
-    if (isNaN(d.getTime())) return '';
-    return d.toLocaleDateString('fr-FR', { day: 'numeric', month: 'long', year: 'numeric' });
-  } catch {
-    return '';
-  }
-}
+import { formatDate } from '@/lib/blog';
 
 const FILTER_CATEGORIES = [
   'Déclaration Préalable',
@@ -103,7 +93,8 @@ export default function BlogClient({ posts }: { posts: BlogPostMeta[] }) {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPosts.map((post, i) => {
-              const color = post.tags[0] ? getCategoryColor(post.tags[0]) : { bg: 'bg-[#e8f6fc]', text: 'text-[#29abe2]' };
+              const category = getPostCategory(post.tags);
+              const color = category ? getCategoryColor(post.tags[0]) : { bg: 'bg-[#e8f6fc]', text: 'text-[#29abe2]' };
               return (
                 <AnimatedSection key={post.slug} delay={i * 0.07}>
                   <article className="h-full flex flex-col bg-white border border-gray-100 rounded-2xl overflow-hidden shadow-sm hover:shadow-xl transition-all duration-200 group">
@@ -111,9 +102,9 @@ export default function BlogClient({ posts }: { posts: BlogPostMeta[] }) {
                     <div className="flex flex-col flex-1 p-6">
 
                       {/* Category badge */}
-                      {post.tags[0] && (
+                      {category && (
                         <span className={`self-start text-xs px-3 py-1 rounded-full font-semibold mb-3 ${color.bg} ${color.text}`}>
-                          {post.tags[0]}
+                          {category}
                         </span>
                       )}
 
