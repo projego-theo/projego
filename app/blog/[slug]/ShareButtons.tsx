@@ -3,13 +3,13 @@
 import { useState } from 'react';
 
 interface ShareButtonsProps {
+  url: string;
   title: string;
-  slug: string;
 }
 
-export default function ShareButtons({ title, slug }: ShareButtonsProps) {
+export default function ShareButtons({ url: fallbackUrl, title }: ShareButtonsProps) {
   const [copied, setCopied] = useState(false);
-  const url = `https://projego.fr/blog/${slug}`;
+  const url = typeof window !== 'undefined' ? window.location.href : fallbackUrl;
 
   async function copyLink() {
     await navigator.clipboard.writeText(url);

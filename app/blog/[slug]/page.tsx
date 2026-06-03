@@ -104,7 +104,7 @@ export default async function BlogPostPage({ params }: Params) {
           </div>
         )}
 
-        <ShareButtons title={post.title} slug={slug} />
+        <ShareButtons url={`https://projego.fr/blog/${slug}`} title={post.title} />
 
         <div className="mt-8">
           <Link href="/blog" className="text-[#29abe2] font-semibold text-sm hover:text-[#1a9fd6] transition-colors">
