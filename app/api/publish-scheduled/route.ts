@@ -7,159 +7,220 @@ const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
 const GITHUB_REPO = "projego-theo/projego";
 const VERCEL_DEPLOY_HOOK = process.env.VERCEL_DEPLOY_HOOK;
 
-interface PendingArticle {
-  id: number;
-  title: string;
-  category: string;
-  keywords?: string[];
-}
-
 function safeCompare(a: string, b: string): boolean {
   try {
-    const bufA = Buffer.from(a);
-    const bufB = Buffer.from(b);
-    if (bufA.length !== bufB.length) return false;
-    return timingSafeEqual(bufA, bufB);
+    return timingSafeEqual(Buffer.from(a), Buffer.from(b));
   } catch {
     return false;
   }
 }
 
-function sanitizeInput(s: unknown, maxLen = 200): string {
-  if (typeof s !== "string") return "";
-  return s.replace(/[\n\r\x00-\x1f]/g, " ").trim().slice(0, maxLen);
-}
+const CATEGORIES = [
+  {
+    day: 1, // Monday
+    id: "declaration-prealable",
+    label: "Déclaration Préalable",
+    topics: "Quels travaux nécessitent une DP, coût moyen (Projego: moins cher et plus rapide), délais instruction mairie, projets (piscine, pergola, clôture, extension <40m², carport, véranda, ravalement, portail), refus et recours, guichet numérique, pièces à fournir (Cerfa, plan de situation, plan de masse, façades, insertion graphique, photos)"
+  },
+  {
+    day: 2, // Tuesday
+    id: "permis-de-construire",
+    label: "Permis de Construire",
+    topics: "Dossier complet et pièces obligatoires, délais 2-3 mois, architecte obligatoire si >150m², projets (maison neuve, extension >40m², surélévation, combles, pool-house), refus et recours, pièces (Cerfa, plan masse, coupe, notice, façades, attestations thermiques), Projego: 48-72h de réalisation"
+  },
+  {
+    day: 3, // Wednesday
+    id: "maitrise-oeuvre",
+    label: "Maîtrise d'œuvre",
+    topics: "Différence architecte vs MO (architecte: 8-12% + commissions artisans, Projego: aucune commission), missions du MO, suivi chantier, plans 2D/3D sur mesure, coordination artisans, zone Vendée 30km autour des Herbiers, honoraires transparents"
+  },
+  {
+    day: 4, // Thursday
+    id: "construction-neuve",
+    label: "Construction Neuve",
+    topics: "RE2020, budget au m² en Vendée, choix terrain, plans sur mesure vs catalogue (avantages Projego), délais construction, financement PTZ, GIEP (Gestion Intégrée des Eaux Pluviales): obligation dans lotissements, techniques (jardin pluie, noue, citerne, tranchée infiltration, toiture stockante), formulaire GIEP dans PC"
+  },
+  {
+    day: 5, // Friday
+    id: "extension-renovation",
+    label: "Extension et Rénovation",
+    topics: "Budget rénovation au m², isolation thermique et phonique, redistribution espaces, surélévation, agrandissement horizontal, valeur ajoutée bien immobilier, quand DP ou PC pour extension, aides (MaPrimeRénov, CEE)"
+  },
+  {
+    day: 6, // Saturday
+    id: "urbanisme-reglementation",
+    label: "Urbanisme et Réglementation",
+    topics: "PLU comment le lire, COS et emprise au sol, hauteur maximale, retrait limites séparatives, zones constructibles, servitudes, spécificités Vendée et communes rurales, recours PLU, certificat d'urbanisme"
+  },
+  {
+    day: 0, // Sunday
+    id: "espace-pro",
+    label: "Espace Pro",
+    topics: "Avantages sous-traitance DP/PC pour artisans BTP (menuisiers, piscinistes, paysagistes, maçons, peintres, plombiers, électriciens, charpentiers, couvreurs), délais garantis 24-48h, transformation croquis en plans professionnels AutoCAD (PDF et DWG), tarifs partenaires, comment ça marche en 3 étapes"
+  },
+];
 
 export async function GET(request: NextRequest) {
-  const secret =
-    request.headers.get("x-blog-secret") ||
-    new URL(request.url).searchParams.get("secret") ||
-    "";
-
-  if (!process.env.BLOG_SECRET || !safeCompare(secret, process.env.BLOG_SECRET)) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  const secret = request.nextUrl.searchParams.get('secret') || request.headers.get('x-blog-secret');
+  if (!secret || !process.env.BLOG_SECRET || !safeCompare(secret, process.env.BLOG_SECRET)) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
   try {
-    const pendingResponse = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/content/blog-pending.json`,
-      { headers: { Authorization: `Bearer ${GITHUB_TOKEN}` } }
-    );
+    // Get today's category based on day of week
+    const dayOfWeek = new Date().getDay(); // 0=Sunday, 1=Monday...
+    const category = CATEGORIES.find(c => c.day === dayOfWeek) || CATEGORIES[0];
 
-    if (!pendingResponse.ok) {
-      return NextResponse.json({ success: true, message: "No pending articles" });
-    }
+    // Generate title
+    const titleResponse = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 200,
+      messages: [{
+        role: "user",
+        content: `Génère UN titre d'article de blog accrocheur et SEO pour Projego (maîtrise d'œuvre et démarches administratives en Vendée) sur le thème: ${category.label}.
 
-    const pendingFile = await pendingResponse.json();
-    const pendingData = JSON.parse(
-      Buffer.from(pendingFile.content, "base64").toString()
-    );
+        Sujets possibles: ${category.topics}
 
-    if (!pendingData.articles || pendingData.articles.length === 0) {
-      return NextResponse.json({ success: true, message: "No articles to publish" });
-    }
-
-    const article: PendingArticle = pendingData.articles[0];
-    const remainingArticles: PendingArticle[] = pendingData.articles.slice(1);
-
-    const safeTitle = sanitizeInput(article.title, 150);
-    const safeCategory = sanitizeInput(article.category, 50);
-    const safeKeywords: string[] = Array.isArray(article.keywords)
-      ? article.keywords.map((k: unknown) => sanitizeInput(k, 50)).filter(Boolean)
-      : [];
-
-    const response = await client.messages.create({
-      model: "claude-sonnet-4-6",
-      max_tokens: 3000,
-      messages: [
-        {
-          role: "user",
-          content: `Rédige un article de blog complet pour Projego sur: "${safeTitle}"
-        Catégorie: ${safeCategory}
-        Mots-clés: ${safeKeywords.join(", ")}
-
-        Format EXACT (respecte le frontmatter):
-        ---
-        title: "${safeTitle}"
-        date: "${new Date().toISOString().split("T")[0]}"
-        description: "Description SEO en 155 caractères maximum"
-        tags: [${safeKeywords.map((k: string) => `"${k}"`).join(", ")}]
-        slug: "slug-url-sans-accents"
-        ---
-
-        Rédige ensuite l'article en markdown: introduction (100 mots), 3 sections H2 (250 mots chacune), conclusion avec appel à l'action vers /contact. Total: 1000-1200 mots. Ton professionnel, optimisé SEO, en français.`,
-        },
-      ],
+        Réponds UNIQUEMENT avec le titre, rien d'autre, pas de guillemets, pas d'explication.`
+      }]
     });
 
-    const articleContent = (response.content[0] as { text: string }).text;
+    const title = titleResponse.content[0].text.trim().replace(/^["']|["']$/g, '');
+
+    // Generate keywords
+    const keywordsResponse = await client.messages.create({
+      model: "claude-haiku-4-5-20251001",
+      max_tokens: 100,
+      messages: [{
+        role: "user",
+        content: `Pour l'article "${title}", donne 5 mots-clés SEO séparés par des virgules. Réponds UNIQUEMENT avec les mots-clés séparés par des virgules, rien d'autre.`
+      }]
+    });
+
+    const keywords = keywordsResponse.content[0].text.split(',').map((k: string) => k.trim());
+
+    // Generate full article
+    const articleResponse = await client.messages.create({
+      model: "claude-sonnet-4-20250514",
+      max_tokens: 3000,
+      messages: [{
+        role: "user",
+        content: `Rédige un article de blog complet pour Projego sur: "${title}"
+
+        Catégorie: ${category.label}
+        Mots-clés: ${keywords.join(", ")}
+        Informations sur Projego: ${category.topics}
+
+        Format EXACT avec frontmatter YAML:
+        ---
+        title: "${title}"
+        date: "${new Date().toISOString().split('T')[0]}"
+        description: "Description SEO unique de 155 caractères maximum"
+        tags: [${keywords.slice(0,4).map((k: string) => `"${k}"`).join(", ")}]
+        slug: "slug-url-sans-accents-ni-espaces"
+        ---
+
+        Puis l'article en markdown:
+        - Introduction percutante (100 mots)
+        - 3 sections H2 avec contenu substantiel (250 mots chacune)
+        - Conclusion avec appel à l'action vers /contact ou /declaration-prealable ou /permis-de-construire selon le sujet
+        - Total: 1000-1200 mots
+        - Ton professionnel et accessible
+        - Mentionner Projego naturellement 2-3 fois
+        - Optimisé SEO avec les mots-clés intégrés naturellement
+        - En français`
+      }]
+    });
+
+    const articleContent = articleResponse.content[0].text;
+
+    // Extract slug safely
     const slugMatch = articleContent.match(/slug:\s*["']?([a-z0-9-]+)["']?/);
     const slug = slugMatch
       ? slugMatch[1]
-      : safeTitle
-          .toLowerCase()
-          .normalize("NFD")
-          .replace(/[̀-ͯ]/g, "")
-          .replace(/[^a-z0-9]+/g, "-")
+      : title.toLowerCase()
+          .normalize('NFD')
+          .replace(/[̀-ͯ]/g, '')
+          .replace(/[^a-z0-9]+/g, '-')
+          .replace(/^-|-$/g, '')
           .slice(0, 60);
 
+    // Publish to GitHub
     const fileName = `content/blog/${slug}.md`;
-    const content = Buffer.from(articleContent).toString("base64");
+    const content = Buffer.from(articleContent).toString('base64');
 
-    const publishResponse = await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/${fileName}`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${GITHUB_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: `Blog auto: ${safeTitle}`,
-          content,
-        }),
+    // Check if file exists
+    try {
+      const existing = await fetch(
+        `https://api.github.com/repos/${GITHUB_REPO}/contents/${fileName}`,
+        { headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` } }
+      );
+      if (existing.ok) {
+        // File exists, generate a new unique slug
+        const timestamp = Date.now();
+        const newSlug = `${slug}-${timestamp}`;
+        const newFileName = `content/blog/${newSlug}.md`;
+        const publishResponse = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO}/contents/${newFileName}`,
+          {
+            method: "PUT",
+            headers: {
+              "Authorization": `Bearer ${GITHUB_TOKEN}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              message: `Blog auto: ${title}`,
+              content
+            })
+          }
+        );
+        if (!publishResponse.ok) {
+          const err = await publishResponse.text();
+          console.error('GitHub publish error:', err);
+          return NextResponse.json({ success: false, error: 'GitHub publish failed' }, { status: 500 });
+        }
+      } else {
+        // File doesn't exist, publish normally
+        const publishResponse = await fetch(
+          `https://api.github.com/repos/${GITHUB_REPO}/contents/${fileName}`,
+          {
+            method: "PUT",
+            headers: {
+              "Authorization": `Bearer ${GITHUB_TOKEN}`,
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              message: `Blog auto: ${title}`,
+              content
+            })
+          }
+        );
+        if (!publishResponse.ok) {
+          const err = await publishResponse.text();
+          console.error('GitHub publish error:', err);
+          return NextResponse.json({ success: false, error: 'GitHub publish failed' }, { status: 500 });
+        }
       }
-    );
-
-    if (!publishResponse.ok) {
-      const error = await publishResponse.text();
-      return NextResponse.json({ success: false, error: `GitHub error: ${error}` });
+    } catch (err) {
+      console.error('GitHub error:', err);
+      return NextResponse.json({ success: false, error: 'GitHub error' }, { status: 500 });
     }
 
-    const updatedContent = Buffer.from(
-      JSON.stringify({
-        validated_at: pendingData.validated_at,
-        articles: remainingArticles,
-      })
-    ).toString("base64");
-
-    await fetch(
-      `https://api.github.com/repos/${GITHUB_REPO}/contents/content/blog-pending.json`,
-      {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${GITHUB_TOKEN}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          message: "Update pending articles",
-          content: updatedContent,
-          sha: pendingFile.sha,
-        }),
-      }
-    );
-
+    // Trigger Vercel rebuild
     if (VERCEL_DEPLOY_HOOK) {
       await fetch(VERCEL_DEPLOY_HOOK, { method: "POST" });
     }
 
     return NextResponse.json({
       success: true,
-      published: slug,
-      remaining: remainingArticles.length,
+      title,
+      slug,
+      category: category.label,
+      day: dayOfWeek
     });
+
   } catch (error) {
-    console.error("Publish error:", error);
-    return NextResponse.json({ success: false, error: "Internal server error" });
+    console.error('publish-scheduled error:', error);
+    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
   }
 }
