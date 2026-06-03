@@ -85,7 +85,7 @@ export async function GET(request: NextRequest) {
       }]
     });
 
-    const title = titleResponse.content[0].text.trim().replace(/^["']|["']$/g, '');
+    const title = (titleResponse.content[0] as any).text.trim().replace(/^["']|["']$/g, '');
 
     // Generate keywords
     const keywordsResponse = await client.messages.create({
@@ -97,7 +97,7 @@ export async function GET(request: NextRequest) {
       }]
     });
 
-    const keywords = keywordsResponse.content[0].text.split(',').map((k: string) => k.trim());
+    const keywords = (keywordsResponse.content[0] as any).text.split(',').map((k: string) => k.trim());
 
     // Generate full article
     const articleResponse = await client.messages.create({
@@ -132,7 +132,7 @@ export async function GET(request: NextRequest) {
       }]
     });
 
-    const articleContent = articleResponse.content[0].text;
+    const articleContent = (articleResponse.content[0] as any).text;
 
     // Extract slug safely
     const slugMatch = articleContent.match(/slug:\s*["']?([a-z0-9-]+)["']?/);
