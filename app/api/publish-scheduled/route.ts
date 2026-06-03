@@ -116,9 +116,12 @@ async function appendTitleHistory(title: string, existingSha: string, existingTi
 }
 
 export async function GET(request: NextRequest) {
-  const secret = request.nextUrl.searchParams.get('secret') || request.headers.get('x-blog-secret');
-  if (!secret || !process.env.BLOG_SECRET || !safeCompare(secret, process.env.BLOG_SECRET)) {
-    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  const isVercelCron = request.headers.get('x-vercel-cron') === '1';
+  if (!isVercelCron) {
+    const secret = request.nextUrl.searchParams.get('secret') || request.headers.get('x-blog-secret');
+    if (!secret || !process.env.BLOG_SECRET || !safeCompare(secret, process.env.BLOG_SECRET)) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
   }
 
   try {
