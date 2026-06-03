@@ -8,6 +8,16 @@ import { dpTypes, pcTypes } from '@/lib/workTypes';
 
 const BASE_URL = 'https://www.projego.fr';
 
+function safeDate(dateStr: string | undefined): string {
+  try {
+    const d = new Date(dateStr || '');
+    if (isNaN(d.getTime())) return new Date().toISOString();
+    return d.toISOString();
+  } catch {
+    return new Date().toISOString();
+  }
+}
+
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();
 
@@ -31,7 +41,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const blogPosts: MetadataRoute.Sitemap = getAllPostsMeta().map((post) => ({
     url: `${BASE_URL}/blog/${post.slug}`,
-    lastModified: new Date(post.date),
+    lastModified: safeDate(post.date),
     changeFrequency: 'yearly' as const,
     priority: 0.6,
   }));
