@@ -49,17 +49,18 @@ function getCategoryColor(tag: string): { bg: string; text: string } {
   return { bg: 'bg-[#e8f6fc]', text: 'text-[#29abe2]' };
 }
 
-function getPostCategory(tags: string[]): string {
-  for (const tag of tags) {
-    const t = normalize(tag);
-    if (t.includes('declaration') || t === 'dp') return 'Déclaration Préalable';
-    if (t.includes('permis') || t === 'pc') return 'Permis de Construire';
-    if (t.includes('maitrise') || t.includes('oeuvre')) return "Maîtrise d'œuvre";
-    if (t.includes('construction')) return 'Construction Neuve';
-    if (t.includes('extension') || t.includes('renovation')) return 'Extension et Rénovation';
-    if (t.includes('urbanisme') || t.includes('reglementation')) return 'Urbanisme et Réglementation';
-    if (t.includes('pro') || t.includes('artisan')) return 'Espace Pro';
-  }
+function getPostCategory(tags: string[], title: string): string {
+  const combined = [...tags, title].map(normalize).join(' ');
+  const has = (kw: string) => combined.includes(normalize(kw));
+  const tagExact = (kw: string) => tags.some(t => normalize(t) === kw);
+
+  if (has('declaration') || tagExact('dp')) return 'Déclaration Préalable';
+  if (has('permis') || tagExact('pc')) return 'Permis de Construire';
+  if (has('maitrise') || has('oeuvre')) return "Maîtrise d'œuvre";
+  if (has('construction') || has('RE2020') || has('budget') || has('PTZ') || has('financement') || has('terrain') || has('maison neuve') || has('catalogue')) return 'Construction Neuve';
+  if (has('extension') || has('renovation') || has('MaPrimeRenov') || has('CEE') || has('isolation') || has('surelevation') || has('agrandissement')) return 'Extension et Rénovation';
+  if (has('urbanisme') || has('reglementation') || has('GIEP') || has('eaux pluviales') || has('lotissement') || has('conformite')) return 'Urbanisme et Réglementation';
+  if (has('artisan') || has('pro') || has('BTP') || has('sous-traitance') || has('AutoCAD') || has('croquis')) return 'Espace Pro';
   return '';
 }
 
@@ -68,7 +69,7 @@ export default function BlogClient({ posts }: { posts: BlogPostMeta[] }) {
 
   const filteredPosts = selectedCategory === 'Tous'
     ? posts
-    : posts.filter((p) => getPostCategory(p.tags) === selectedCategory);
+    : posts.filter((p) => getPostCategory(p.tags, p.title) === selectedCategory);
 
   return (
     <section className="py-20 bg-transparent">
@@ -110,7 +111,7 @@ export default function BlogClient({ posts }: { posts: BlogPostMeta[] }) {
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredPosts.map((post, i) => {
-              const category = getPostCategory(post.tags);
+              const category = getPostCategory(post.tags, post.title);
               const color = category ? getCategoryColor(post.tags[0]) : { bg: 'bg-[#e8f6fc]', text: 'text-[#29abe2]' };
               return (
                 <AnimatedSection key={post.slug} delay={i * 0.07}>
