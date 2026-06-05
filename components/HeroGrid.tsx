@@ -45,6 +45,7 @@ export const HeroGrid = ({ children, className }: { children: React.ReactNode; c
           fill
           className="object-cover opacity-[0.08]"
           priority
+          sizes="100vw"
         />
       </div>
       <div className="absolute inset-0 z-0 opacity-[0.06]">
