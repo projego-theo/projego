@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
 import Link from 'next/link';
+import Script from 'next/script';
 import { proPages, getProPageBySlug } from '@/lib/proMetiers';
 import { getOrGenerateContent } from '@/lib/generateContent';
 import { PageBackground } from '@/components/PageBackground';
@@ -57,6 +58,11 @@ export default async function ProPage({ params }: Params) {
 
   return (
     <>
+      <Script
+        id="meta-pixel-pro"
+        strategy="afterInteractive"
+        dangerouslySetInnerHTML={{ __html: `fbq('trackCustom','VisitePro');` }}
+      />
       <PageBackground />
       <section className="bg-[#1a1a2e] pt-32 pb-20 px-4">
         <div className="max-w-4xl mx-auto">
