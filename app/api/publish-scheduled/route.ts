@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { waitUntil } from "@vercel/functions";
 import Anthropic from "@anthropic-ai/sdk";
 import { timingSafeEqual } from "crypto";
 
@@ -123,6 +124,132 @@ async function appendTitleHistory(title: string, existingSha: string, existingTi
   }
 }
 
+async function generateAndPublish(category: typeof CATEGORIES[number]) {
+  // Fetch existing slugs and title history in parallel
+  const [existingSlugs, { sha: historySha, titles: historyTitles }] = await Promise.all([
+    fetchExistingSlugs(),
+    fetchTitleHistory(),
+  ]);
+
+  const existingContext = existingSlugs.length > 0
+    ? `\n\nArticles existants (évite des sujets similaires): ${existingSlugs.join(', ')}`
+    : '';
+  const historyContext = historyTitles.length > 0
+    ? `\n\nTitres déjà publiés (ne répète pas ces sujets): ${historyTitles.slice(-50).join(' | ')}`
+    : '';
+
+  // Generate title
+  const titleResponse = await client.messages.create({
+    model: process.env.CLAUDE_HAIKU_MODEL || "claude-haiku-4-5-20251001",
+    max_tokens: 200,
+    messages: [{
+      role: "user",
+      content: `Génère UN titre d'article de blog accrocheur et SEO pour Projego (maîtrise d'œuvre et démarches administratives en Vendée) sur le thème: ${category.label}.
+
+      Sujets possibles: ${category.topics}${existingContext}${historyContext}
+
+      Génère un titre UNIQUE qui n'est pas déjà couvert par les articles existants.
+      Réponds UNIQUEMENT avec le titre, rien d'autre, pas de guillemets, pas d'explication.`
+    }]
+  });
+
+  const title = (titleResponse.content[0] as any).text.trim().replace(/^["']|["']$/g, '');
+
+  // Generate keywords
+  const keywordsResponse = await client.messages.create({
+    model: process.env.CLAUDE_HAIKU_MODEL || "claude-haiku-4-5-20251001",
+    max_tokens: 100,
+    messages: [{
+      role: "user",
+      content: `Pour l'article "${title}", donne 5 mots-clés SEO séparés par des virgules. Réponds UNIQUEMENT avec les mots-clés séparés par des virgules, rien d'autre.`
+    }]
+  });
+
+  const keywords = (keywordsResponse.content[0] as any).text.split(',').map((k: string) => k.trim());
+
+  // Generate full article
+  const articleResponse = await client.messages.create({
+    model: process.env.CLAUDE_SONNET_MODEL || "claude-sonnet-4-6",
+    max_tokens: 3000,
+    messages: [{
+      role: "user",
+      content: `Rédige un article de blog complet pour Projego sur: "${title}"
+
+      Catégorie: ${category.label}
+      Mots-clés: ${keywords.join(", ")}
+      Informations sur Projego: ${category.topics}
+
+      Format EXACT avec frontmatter YAML:
+      ---
+      title: "${title}"
+      date: "${new Date().toISOString().split('T')[0]}"
+      description: "Description SEO unique de 155 caractères maximum"
+      tags: [${keywords.slice(0,4).map((k: string) => `"${k}"`).join(", ")}]
+      slug: "slug-url-sans-accents-ni-espaces"
+      ---
+
+      Puis l'article en markdown:
+      - Introduction percutante (100 mots)
+      - 3 sections H2 avec contenu substantiel (250 mots chacune)
+      - Conclusion avec appel à l'action vers /contact ou /declaration-prealable ou /permis-de-construire selon le sujet
+      - Total: 1000-1200 mots
+      - Ton professionnel et accessible
+      - Mentionner Projego naturellement 2-3 fois
+      - Optimisé SEO avec les mots-clés intégrés naturellement
+      - En français`
+    }]
+  });
+
+  const articleContent = cleanArticleContent((articleResponse.content[0] as any).text);
+
+  // Extract slug safely
+  const slugMatch = articleContent.match(/slug:\s*["']?([a-z0-9-]+)["']?/);
+  const slug = slugMatch
+    ? slugMatch[1]
+    : title.toLowerCase()
+        .normalize('NFD')
+        .replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/^-|-$/g, '')
+        .slice(0, 60);
+
+  // Publish to GitHub
+  const fileName = `content/blog/${slug}.md`;
+  const content = Buffer.from(articleContent).toString('base64');
+
+  const existing = await fetch(
+    `https://api.github.com/repos/${GITHUB_REPO}/contents/${fileName}`,
+    { headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` } }
+  );
+
+  const targetFileName = existing.ok
+    ? `content/blog/${slug}-${Date.now()}.md`
+    : fileName;
+
+  const publishResponse = await fetch(
+    `https://api.github.com/repos/${GITHUB_REPO}/contents/${targetFileName}`,
+    {
+      method: "PUT",
+      headers: GITHUB_HEADERS,
+      body: JSON.stringify({ message: `Blog auto: ${title}`, content }),
+    }
+  );
+
+  if (!publishResponse.ok) {
+    const err = await publishResponse.text();
+    console.error('GitHub publish error:', err);
+    return;
+  }
+
+  // Append title to history and trigger rebuild in parallel
+  await Promise.all([
+    appendTitleHistory(title, historySha, historyTitles),
+    VERCEL_DEPLOY_HOOK ? fetch(VERCEL_DEPLOY_HOOK, { method: "POST" }) : Promise.resolve(),
+  ]);
+
+  console.log(`publish-scheduled: published "${title}" → ${targetFileName}`);
+}
+
 export async function GET(request: NextRequest) {
   const isVercelCron = request.headers.get('x-vercel-cron') === '1';
   if (!isVercelCron) {
@@ -132,166 +259,14 @@ export async function GET(request: NextRequest) {
     }
   }
 
-  try {
-    // Get today's category based on day of week
-    const dayOfWeek = new Date().getDay(); // 0=Sunday, 1=Monday...
-    const category = CATEGORIES.find(c => c.day === dayOfWeek) || CATEGORIES[0];
+  const dayOfWeek = new Date().getDay();
+  const category = CATEGORIES.find(c => c.day === dayOfWeek) || CATEGORIES[0];
 
-    // Fetch existing slugs and title history in parallel
-    const [existingSlugs, { sha: historySha, titles: historyTitles }] = await Promise.all([
-      fetchExistingSlugs(),
-      fetchTitleHistory(),
-    ]);
+  waitUntil(
+    generateAndPublish(category).catch((err) =>
+      console.error('publish-scheduled background error:', err)
+    )
+  );
 
-    const existingContext = existingSlugs.length > 0
-      ? `\n\nArticles existants (évite des sujets similaires): ${existingSlugs.join(', ')}`
-      : '';
-    const historyContext = historyTitles.length > 0
-      ? `\n\nTitres déjà publiés (ne répète pas ces sujets): ${historyTitles.slice(-50).join(' | ')}`
-      : '';
-
-    // Generate title
-    const titleResponse = await client.messages.create({
-      model: process.env.CLAUDE_HAIKU_MODEL || "claude-haiku-4-5-20251001",
-      max_tokens: 200,
-      messages: [{
-        role: "user",
-        content: `Génère UN titre d'article de blog accrocheur et SEO pour Projego (maîtrise d'œuvre et démarches administratives en Vendée) sur le thème: ${category.label}.
-
-        Sujets possibles: ${category.topics}${existingContext}${historyContext}
-
-        Génère un titre UNIQUE qui n'est pas déjà couvert par les articles existants.
-        Réponds UNIQUEMENT avec le titre, rien d'autre, pas de guillemets, pas d'explication.`
-      }]
-    });
-
-    const title = (titleResponse.content[0] as any).text.trim().replace(/^["']|["']$/g, '');
-
-    // Generate keywords
-    const keywordsResponse = await client.messages.create({
-      model: process.env.CLAUDE_HAIKU_MODEL || "claude-haiku-4-5-20251001",
-      max_tokens: 100,
-      messages: [{
-        role: "user",
-        content: `Pour l'article "${title}", donne 5 mots-clés SEO séparés par des virgules. Réponds UNIQUEMENT avec les mots-clés séparés par des virgules, rien d'autre.`
-      }]
-    });
-
-    const keywords = (keywordsResponse.content[0] as any).text.split(',').map((k: string) => k.trim());
-
-    // Generate full article
-    const articleResponse = await client.messages.create({
-      model: process.env.CLAUDE_SONNET_MODEL || "claude-sonnet-4-6",
-      max_tokens: 3000,
-      messages: [{
-        role: "user",
-        content: `Rédige un article de blog complet pour Projego sur: "${title}"
-
-        Catégorie: ${category.label}
-        Mots-clés: ${keywords.join(", ")}
-        Informations sur Projego: ${category.topics}
-
-        Format EXACT avec frontmatter YAML:
-        ---
-        title: "${title}"
-        date: "${new Date().toISOString().split('T')[0]}"
-        description: "Description SEO unique de 155 caractères maximum"
-        tags: [${keywords.slice(0,4).map((k: string) => `"${k}"`).join(", ")}]
-        slug: "slug-url-sans-accents-ni-espaces"
-        ---
-
-        Puis l'article en markdown:
-        - Introduction percutante (100 mots)
-        - 3 sections H2 avec contenu substantiel (250 mots chacune)
-        - Conclusion avec appel à l'action vers /contact ou /declaration-prealable ou /permis-de-construire selon le sujet
-        - Total: 1000-1200 mots
-        - Ton professionnel et accessible
-        - Mentionner Projego naturellement 2-3 fois
-        - Optimisé SEO avec les mots-clés intégrés naturellement
-        - En français`
-      }]
-    });
-
-    const articleContent = cleanArticleContent((articleResponse.content[0] as any).text);
-
-    // Extract slug safely
-    const slugMatch = articleContent.match(/slug:\s*["']?([a-z0-9-]+)["']?/);
-    const slug = slugMatch
-      ? slugMatch[1]
-      : title.toLowerCase()
-          .normalize('NFD')
-          .replace(/[̀-ͯ]/g, '')
-          .replace(/[^a-z0-9]+/g, '-')
-          .replace(/^-|-$/g, '')
-          .slice(0, 60);
-
-    // Publish to GitHub
-    const fileName = `content/blog/${slug}.md`;
-    const content = Buffer.from(articleContent).toString('base64');
-
-    // Check if file exists
-    try {
-      const existing = await fetch(
-        `https://api.github.com/repos/${GITHUB_REPO}/contents/${fileName}`,
-        { headers: { "Authorization": `Bearer ${GITHUB_TOKEN}` } }
-      );
-      if (existing.ok) {
-        // File exists, generate a new unique slug
-        const timestamp = Date.now();
-        const newSlug = `${slug}-${timestamp}`;
-        const newFileName = `content/blog/${newSlug}.md`;
-        const publishResponse = await fetch(
-          `https://api.github.com/repos/${GITHUB_REPO}/contents/${newFileName}`,
-          {
-            method: "PUT",
-            headers: GITHUB_HEADERS,
-            body: JSON.stringify({ message: `Blog auto: ${title}`, content })
-          }
-        );
-        if (!publishResponse.ok) {
-          const err = await publishResponse.text();
-          console.error('GitHub publish error:', err);
-          return NextResponse.json({ success: false, error: 'GitHub publish failed' }, { status: 500 });
-        }
-      } else {
-        // File doesn't exist, publish normally
-        const publishResponse = await fetch(
-          `https://api.github.com/repos/${GITHUB_REPO}/contents/${fileName}`,
-          {
-            method: "PUT",
-            headers: GITHUB_HEADERS,
-            body: JSON.stringify({ message: `Blog auto: ${title}`, content })
-          }
-        );
-        if (!publishResponse.ok) {
-          const err = await publishResponse.text();
-          console.error('GitHub publish error:', err);
-          return NextResponse.json({ success: false, error: 'GitHub publish failed' }, { status: 500 });
-        }
-      }
-    } catch (err) {
-      console.error('GitHub error:', err);
-      return NextResponse.json({ success: false, error: 'GitHub error' }, { status: 500 });
-    }
-
-    // Append title to history (fire-and-forget)
-    appendTitleHistory(title, historySha, historyTitles);
-
-    // Trigger Vercel rebuild
-    if (VERCEL_DEPLOY_HOOK) {
-      await fetch(VERCEL_DEPLOY_HOOK, { method: "POST" });
-    }
-
-    return NextResponse.json({
-      success: true,
-      title,
-      slug,
-      category: category.label,
-      day: dayOfWeek
-    });
-
-  } catch (error) {
-    console.error('publish-scheduled error:', error);
-    return NextResponse.json({ success: false, error: 'Internal server error' }, { status: 500 });
-  }
+  return NextResponse.json({ status: 'started', category: category.label, day: dayOfWeek });
 }
