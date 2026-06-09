@@ -6,6 +6,7 @@ import HeroSection from '@/components/HeroSection';
 import { PageBackground } from '@/components/PageBackground';
 import { SectionCloud } from '@/components/SectionCloud';
 import { getAllPostsMeta } from '@/lib/blog';
+import StartProjectButton from '@/components/StartProjectButton';
 
 export const metadata: Metadata = {
   title: { absolute: "Projego — Permis de construire & Maîtrise d'œuvre Vendée" },
@@ -362,12 +363,7 @@ export default async function HomePage() {
           <h2 className="text-3xl sm:text-4xl font-bold text-[#1a1a1a] mb-4">Prêt à lancer votre projet ?</h2>
           <p className="text-gray-600 text-lg mb-10">Décrivez-nous votre projet en quelques mots. Nous vous répondons sous 24h avec une étude de faisabilité gratuite.</p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link href="/demarrer-mon-projet" className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-10 py-4 rounded-full transition-all hover:-translate-y-0.5 shadow-lg">
-              Démarrer mon projet
-              <svg className="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
+            <StartProjectButton />
             <Link href="/espace-pro" className="inline-flex items-center gap-2 border-2 border-gray-300 hover:border-[#1a1a1a] text-[#1a1a1a] font-semibold px-8 py-4 rounded-full transition-all">
               Pour les Pros
             </Link>

@@ -84,15 +84,16 @@ export default function HeroSection() {
               transition={{ duration: 0.7, delay: 0.45 }}
               className="flex flex-wrap gap-4"
             >
-              <Link
-                href="/demarrer-mon-projet"
+              <button
+                type="button"
+                onClick={() => window.dispatchEvent(new CustomEvent('open-tunnel'))}
                 className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-semibold px-8 py-4 rounded-full transition-all shadow-lg shadow-[#29abe2]/20 hover:-translate-y-0.5"
               >
                 Démarrer mon projet
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
                 </svg>
-              </Link>
+              </button>
               <Link
                 href="/espace-pro"
                 className="inline-flex items-center gap-2 border-2 border-[#29abe2]/60 hover:border-[#29abe2] hover:bg-[#29abe2]/10 text-white font-semibold px-8 py-4 rounded-full transition-all"

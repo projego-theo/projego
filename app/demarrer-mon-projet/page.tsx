@@ -1,6 +1,6 @@
 import type { Metadata } from 'next';
 import { PageBackground } from '@/components/PageBackground';
-import TunnelQualification from './TunnelQualification';
+import AutoOpen from './AutoOpen';
 
 export const metadata: Metadata = {
   title: 'Démarrer mon projet — Permis de construire & démarches administratives | Projego',
@@ -19,7 +19,7 @@ export default function DemarrerMonProjetPage() {
   return (
     <>
       <PageBackground />
-      <TunnelQualification />
+      <AutoOpen />
     </>
   );
 }
