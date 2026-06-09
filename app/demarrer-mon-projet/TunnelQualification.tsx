@@ -144,8 +144,6 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
   const [autreMode, setAutreMode] = useState<{ type: 'dp' | 'pc' } | null>(null);
   const [autreTexte, setAutreTexte] = useState('');
 
-  const webhookSentRef = useRef(false);
-
   // Lock body scroll
   useEffect(() => {
     document.body.style.overflow = 'hidden';
@@ -208,25 +206,6 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
     }
   }, [step]);
 
-  // ── Webhook GHL ───────────────────────────────────────────────────────────
-
-  useEffect(() => {
-    if (step !== 6 || webhookSentRef.current) return;
-    webhookSentRef.current = true;
-    fetch('https://services.leadconnectorhq.com/hooks/Sqd3WdWGgoefvce96mhp/webhook-trigger/18940dc5-9d6b-4f6f-88d2-a87582431b46', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        ville: formData.ville?.nom ?? '',
-        adresse: formData.adresse?.label ?? '',
-        cadastre: formData.adresse?.id ?? '',
-        type_autorisation: formData.autorisation === 'dp' ? 'DP' : formData.autorisation === 'pc' ? 'PC' : 'Je ne sais pas',
-        type_travaux: formData.travaux ?? '',
-        source: 'tunnel-qualification',
-      }),
-    }).catch(err => console.error('Webhook GHL error:', err));
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [step]);
 
   // ── Navigation ─────────────────────────────────────────────────────────────
 

@@ -21,6 +21,9 @@ export async function POST(request: NextRequest) {
       source:    "contact-form",
     };
 
+    console.log("[contact] GHL_WEBHOOK env set?", !!process.env.GHL_CONTACT_WEBHOOK);
+    console.log("[contact] GHL_WEBHOOK url:", GHL_WEBHOOK);
+    console.log("[contact] payload JSON:", JSON.stringify(payload, null, 2));
     console.log("[contact] posting to GHL webhook:", GHL_WEBHOOK);
 
     const res = await fetch(GHL_WEBHOOK, {
