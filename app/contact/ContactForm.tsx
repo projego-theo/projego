@@ -25,11 +25,12 @@ export default function ContactForm() {
 
     const payload = {
       firstName: data.get('firstName') as string,
-      lastName: data.get('lastName') as string,
-      email: data.get('email') as string,
-      service: data.get('service') as string,
-      city: data.get('city') as string,
-      message: data.get('message') as string,
+      lastName:  data.get('lastName')  as string,
+      email:     data.get('email')     as string,
+      phone:     data.get('phone')     as string,
+      service:   data.get('service')   as string,
+      city:      data.get('city')      as string,
+      message:   data.get('message')   as string,
     };
 
     try {
@@ -104,6 +105,18 @@ export default function ContactForm() {
           type="email"
           required
           placeholder="jean@exemple.fr"
+          className="w-full bg-[#f8fafc] border border-gray-200 rounded-xl px-4 py-3 text-[#3d3d3d] text-sm focus:outline-none focus:ring-2 focus:ring-[#29abe2] focus:border-transparent transition-all"
+        />
+      </div>
+
+      {/* Téléphone */}
+      <div>
+        <label htmlFor="phone" className="block text-sm font-semibold text-[#3d3d3d] mb-1.5">Téléphone <span className="text-gray-400 font-normal">(facultatif)</span></label>
+        <input
+          id="phone"
+          name="phone"
+          type="tel"
+          placeholder="06 12 34 56 78"
           className="w-full bg-[#f8fafc] border border-gray-200 rounded-xl px-4 py-3 text-[#3d3d3d] text-sm focus:outline-none focus:ring-2 focus:ring-[#29abe2] focus:border-transparent transition-all"
         />
       </div>

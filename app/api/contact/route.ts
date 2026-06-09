@@ -8,14 +8,20 @@ export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
 
+    console.log("[contact] submission received — email:", body.email, "/ service:", body.service);
+
     const payload = {
       firstName: String(body.firstName ?? "").slice(0, 100),
-      lastName: String(body.lastName ?? "").slice(0, 100),
-      email: String(body.email ?? "").slice(0, 200),
-      service: String(body.service ?? "").slice(0, 100),
-      city: String(body.city ?? "").slice(0, 100),
-      message: String(body.message ?? "").slice(0, 2000),
+      lastName:  String(body.lastName  ?? "").slice(0, 100),
+      email:     String(body.email     ?? "").slice(0, 200),
+      phone:     String(body.phone     ?? "").slice(0, 30),
+      service:   String(body.service   ?? "").slice(0, 100),
+      city:      String(body.city      ?? "").slice(0, 100),
+      message:   String(body.message   ?? "").slice(0, 2000),
+      source:    "contact-form",
     };
+
+    console.log("[contact] posting to GHL webhook:", GHL_WEBHOOK);
 
     const res = await fetch(GHL_WEBHOOK, {
       method: "POST",
@@ -23,11 +29,19 @@ export async function POST(request: NextRequest) {
       body: JSON.stringify(payload),
     });
 
-    if (res.ok || res.status === 200 || res.status === 201 || res.status === 204) {
+    const responseText = await res.text();
+    console.log("[contact] GHL response — status:", res.status, "/ body:", responseText.slice(0, 500));
+
+    if (res.ok) {
+      console.log("[contact] success — lead forwarded to GHL");
       return NextResponse.json({ success: true });
     }
-    return NextResponse.json({ success: false }, { status: 502 });
-  } catch {
+
+    console.error("[contact] GHL webhook error — status:", res.status, "/ body:", responseText);
+    return NextResponse.json({ success: false, detail: `GHL ${res.status}` }, { status: 502 });
+
+  } catch (err) {
+    console.error("[contact] unexpected error:", err);
     return NextResponse.json({ success: false }, { status: 500 });
   }
 }
