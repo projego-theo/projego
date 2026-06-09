@@ -61,7 +61,7 @@ export default async function ProPage({ params }: Params) {
       <Script
         id="meta-pixel-pro"
         strategy="afterInteractive"
-        dangerouslySetInnerHTML={{ __html: `fbq('trackCustom','VisitePro');` }}
+        dangerouslySetInnerHTML={{ __html: `if(typeof fbq==='function')fbq('trackCustom','VisitePro');` }}
       />
       <PageBackground />
       <section className="bg-[#1a1a2e] pt-32 pb-20 px-4">

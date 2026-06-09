@@ -42,6 +42,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     { url: `${BASE_URL}/a-propos`, lastModified: now, changeFrequency: 'yearly', priority: 0.5 },
     { url: `${BASE_URL}/mentions-legales`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },
     { url: `${BASE_URL}/politique-confidentialite`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },
+    { url: `${BASE_URL}/politique-cookies`, lastModified: now, changeFrequency: 'yearly', priority: 0.2 },
   ];
 
   const blogPosts: MetadataRoute.Sitemap = getAllPostsMeta().map((post) => ({
