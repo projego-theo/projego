@@ -207,7 +207,7 @@ fbq('track','PageView');`,
                 <button
                   onPointerDown={() => save({ stats: true, marketing: true })}
                   style={{ touchAction: 'manipulation' }}
-                  className="touch-manipulation flex-1 text-sm font-semibold bg-[#1270a0] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors"
+                  className="touch-manipulation flex-1 text-sm font-semibold bg-[#29abe2] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors shadow-lg shadow-[#29abe2]/40 border border-[#1a8fc0]"
                 >
                   Tout accepter
                 </button>
