@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { HeroGrid } from '@/components/HeroGrid';
@@ -27,6 +27,16 @@ const stats = [
 
 export default function HeroSection() {
   const [hoveredCard, setHoveredCard] = useState<'A' | 'B' | null>(null);
+  const [noAnim, setNoAnim] = useState(false);
+
+  useEffect(() => {
+    const ua = navigator.userAgent;
+    setNoAnim(
+      /^((?!chrome|android).)*safari/i.test(ua) ||
+      /iPad|iPhone|iPod/.test(ua) ||
+      (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1)
+    );
+  }, []);
 
   const cardAActive = hoveredCard === 'A';
   const cardBActive = hoveredCard === 'B';
@@ -41,18 +51,18 @@ export default function HeroSection() {
           {/* Left: headline + CTAs */}
           <div>
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={noAnim ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.15 }}
+              transition={{ duration: noAnim ? 0 : 0.7, delay: noAnim ? 0 : 0.15 }}
               className="text-5xl md:text-7xl font-extrabold tracking-tight text-white leading-tight"
             >
               Un projet
             </motion.div>
 
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={noAnim ? { opacity: 1, y: 0 } : { opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.28 }}
+              transition={{ duration: noAnim ? 0 : 0.6, delay: noAnim ? 0 : 0.28 }}
               style={{ minHeight: '2.5rem' }}
               className="mt-3 mb-6"
             >
@@ -70,18 +80,18 @@ export default function HeroSection() {
             </motion.div>
 
             <motion.h1
-              initial={{ opacity: 0, y: 30 }}
+              initial={noAnim ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.35 }}
+              transition={{ duration: noAnim ? 0 : 0.7, delay: noAnim ? 0 : 0.35 }}
               className="text-lg text-gray-300 leading-relaxed mb-10 max-w-lg"
             >
               Maîtrise d&apos;œuvre qui gère tous vos projets et toutes vos démarches
             </motion.h1>
 
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
+              initial={noAnim ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7, delay: 0.45 }}
+              transition={{ duration: noAnim ? 0 : 0.7, delay: noAnim ? 0 : 0.45 }}
               className="flex flex-wrap gap-4"
             >
               <button
@@ -105,9 +115,9 @@ export default function HeroSection() {
 
           {/* Right: Type A & Type B cards */}
           <motion.div
-            initial={{ opacity: 0, x: 40 }}
+            initial={noAnim ? { opacity: 1, x: 0 } : { opacity: 0, x: 40 }}
             animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.8, delay: 0.35 }}
+            transition={{ duration: noAnim ? 0 : 0.8, delay: noAnim ? 0 : 0.35 }}
             className="grid gap-4"
           >
             {/* Type A */}
@@ -119,6 +129,7 @@ export default function HeroSection() {
                 borderStyle: 'solid',
                 borderColor: cardAActive ? '#29abe2' : 'rgba(41,171,226,0.4)',
                 backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
                 opacity: cardADimmed ? 0.5 : 1,
               }}
               onMouseEnter={() => setHoveredCard('A')}
@@ -191,6 +202,7 @@ export default function HeroSection() {
                 borderStyle: 'solid',
                 borderColor: cardBActive ? '#29abe2' : 'rgba(255,255,255,0.2)',
                 backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
                 opacity: cardBDimmed ? 0.5 : 1,
               }}
               onMouseEnter={() => setHoveredCard('B')}
@@ -254,9 +266,9 @@ export default function HeroSection() {
 
         {/* Stats row — full width below the 2-column layout */}
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={noAnim ? { opacity: 1, y: 0 } : { opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.7, delay: 0.6 }}
+          transition={{ duration: noAnim ? 0 : 0.7, delay: noAnim ? 0 : 0.6 }}
           className="grid grid-cols-2 sm:grid-cols-4 gap-3 pb-10"
         >
           {stats.map((stat) => (

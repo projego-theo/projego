@@ -164,7 +164,7 @@ fbq('track','PageView');`,
 
       {/* ── Popup overlay ── */}
       {consent === null && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm">
+        <div className="fixed inset-0 z-[45] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" style={{ WebkitBackdropFilter: 'blur(4px)' }}>
 
           {/* Étape 1 — Principal */}
           {step === 'main' && (
@@ -181,13 +181,15 @@ fbq('track','PageView');`,
               </Link>
               <div className="flex gap-3">
                 <button
-                  onClick={() => setStep('customize')}
+                  onPointerDown={() => setStep('customize')}
+                  style={{ touchAction: 'manipulation' }}
                   className="flex-1 text-sm font-medium text-gray-500 border border-gray-200 hover:border-gray-400 hover:text-gray-700 px-4 py-2.5 rounded-full transition-colors"
                 >
                   Personnaliser
                 </button>
                 <button
-                  onClick={() => save({ stats: true, marketing: true })}
+                  onPointerDown={() => save({ stats: true, marketing: true })}
+                  style={{ touchAction: 'manipulation' }}
                   className="flex-1 text-sm font-semibold bg-[#29abe2] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors"
                 >
                   Tout accepter
@@ -200,7 +202,8 @@ fbq('track','PageView');`,
           {step === 'customize' && (
             <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full p-6">
               <button
-                onClick={() => setStep('main')}
+                onPointerDown={() => setStep('main')}
+                style={{ touchAction: 'manipulation' }}
                 className="text-xs text-gray-400 hover:text-gray-600 mb-4 flex items-center gap-1 transition-colors"
               >
                 ← Retour
@@ -244,13 +247,15 @@ fbq('track','PageView');`,
 
               <div className="flex gap-3">
                 <button
-                  onClick={() => save({ stats: false, marketing: false })}
+                  onPointerDown={() => save({ stats: false, marketing: false })}
+                  style={{ touchAction: 'manipulation' }}
                   className="flex-1 text-sm font-medium text-gray-500 border border-gray-200 hover:border-gray-400 hover:text-gray-700 px-4 py-2.5 rounded-full transition-colors"
                 >
                   Tout refuser
                 </button>
                 <button
-                  onClick={() => save({ stats: statsToggle, marketing: marketingToggle })}
+                  onPointerDown={() => save({ stats: statsToggle, marketing: marketingToggle })}
+                  style={{ touchAction: 'manipulation' }}
                   className="flex-1 text-sm font-semibold bg-[#29abe2] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors"
                 >
                   Autoriser la sélection

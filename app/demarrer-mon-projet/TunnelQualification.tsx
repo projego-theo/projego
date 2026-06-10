@@ -153,6 +153,7 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
     document.body.classList.add('modal-open');
     return () => {
       document.body.style.overflow = '';
+      document.body.style.width = '';
       document.body.classList.remove('modal-open');
     };
   }, []);
@@ -276,7 +277,7 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto">
+    <div className="fixed inset-0 z-[60] overflow-y-auto">
       {/* Backdrop */}
       <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
 
