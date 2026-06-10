@@ -268,6 +268,7 @@ export default async function HomePage() {
                   fill
                   className="object-cover"
                   sizes="280px"
+                  loading="lazy"
                 />
               </div>
             ))}

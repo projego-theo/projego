@@ -97,7 +97,7 @@ export default function HeroSection() {
               <button
                 type="button"
                 onClick={() => window.dispatchEvent(new CustomEvent('open-tunnel'))}
-                className="inline-flex items-center gap-2 cursor-pointer bg-[#1a8fc0] hover:bg-[#1a9fd6] text-white font-semibold px-8 py-4 rounded-full transition-all shadow-lg shadow-[#29abe2]/20 hover:-translate-y-0.5"
+                className="inline-flex items-center gap-2 cursor-pointer bg-[#1270a0] hover:bg-[#1a9fd6] text-white font-semibold px-8 py-4 rounded-full transition-all shadow-lg shadow-[#29abe2]/20 hover:-translate-y-0.5"
               >
                 Démarrer mon projet
                 <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">

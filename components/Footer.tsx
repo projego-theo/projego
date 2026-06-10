@@ -56,6 +56,7 @@ export default function Footer() {
               width={140}
               height={40}
               className="h-9 w-auto object-contain mb-4"
+              loading="lazy"
             />
             <p className="text-gray-300 text-sm leading-relaxed mb-6">
               Spécialiste des démarches administratives (DP/PC) et de la maîtrise d&apos;œuvre en Vendée. Basé à Beaurepaire (85). En activité depuis 2019 (anciennement TConseils).

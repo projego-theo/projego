@@ -192,7 +192,7 @@ fbq('track','PageView');`,
               </p>
               <Link
                 href="/politique-cookies"
-                className="text-xs text-[#1a8fc0] hover:underline mt-1 mb-5 inline-block"
+                className="text-xs text-[#1270a0] hover:underline mt-1 mb-5 inline-block"
               >
                 En savoir plus
               </Link>
@@ -207,7 +207,7 @@ fbq('track','PageView');`,
                 <button
                   onPointerDown={() => save({ stats: true, marketing: true })}
                   style={{ touchAction: 'manipulation' }}
-                  className="touch-manipulation flex-1 text-sm font-semibold bg-[#1a8fc0] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors"
+                  className="touch-manipulation flex-1 text-sm font-semibold bg-[#1270a0] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors"
                 >
                   Tout accepter
                 </button>
