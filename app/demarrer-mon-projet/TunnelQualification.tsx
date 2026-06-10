@@ -259,9 +259,12 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
   // ── Render ─────────────────────────────────────────────────────────────────
 
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center sm:p-4">
+    <div className="fixed inset-0 z-50 overflow-y-auto">
       {/* Backdrop */}
-      <div className="absolute inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+
+      {/* Centering wrapper — px-4 = calc(100% - 32px) pour le panel */}
+      <div className="relative flex min-h-full items-end sm:items-center justify-center px-4 sm:py-8">
 
       {/* Panel */}
       <motion.div
@@ -270,7 +273,8 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
         exit={{ y: 60, opacity: 0 }}
         transition={{ type: 'spring', damping: 28, stiffness: 320 }}
         onClick={e => e.stopPropagation()}
-        className="relative z-10 bg-white w-full sm:max-w-2xl rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-[92vh] sm:max-h-[88vh]"
+        className="relative w-full max-w-[600px] bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-screen sm:max-h-[88vh]"
+        style={{ boxSizing: 'border-box' }}
       >
         {/* Header */}
         <div className="flex-shrink-0 px-5 pt-5 pb-3 border-b border-gray-100">
@@ -301,7 +305,7 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
         </div>
 
         {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto px-5 py-5">
+        <div className="flex-1 overflow-y-auto overflow-x-hidden px-5 py-5">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div key={step} custom={direction} variants={slideVariants} initial="enter" animate="center" exit="exit" transition={slideTransition}>
 
@@ -424,7 +428,7 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
                   )}
 
                   {!autreMode ? (
-                    <div className="grid grid-cols-3 sm:grid-cols-4 gap-2.5">
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5">
                       {travauxList.map(item => (
                         <button key={`${item.type}-${item.label}`} type="button" onClick={() => handleTravauxClick(item)}
                           className="flex flex-col items-center text-center border-2 border-gray-100 hover:border-[#29abe2] hover:shadow-sm rounded-xl p-3 transition-all group">
@@ -528,6 +532,7 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
           </AnimatePresence>
         </div>
       </motion.div>
+      </div>{/* end centering wrapper */}
     </div>
   );
 }
