@@ -36,7 +36,12 @@ export const HeroGrid = ({ children, className }: { children: React.ReactNode; c
   const maskImage = useMotionTemplate`radial-gradient(300px circle at ${mouseX}px ${mouseY}px, black, transparent)`;
 
   return (
-    <div ref={containerRef} onMouseMove={handleMouseMove} className={`relative w-full flex items-center overflow-hidden bg-[#1a1a2e] ${className ?? 'min-h-screen'}`}>
+    <div
+      ref={containerRef}
+      onMouseMove={handleMouseMove}
+      className={`relative w-full flex items-center overflow-hidden bg-[#1a1a2e] ${className ?? 'min-h-screen'}`}
+      style={{ transform: 'translateZ(0)', WebkitTransform: 'translateZ(0)' }}
+    >
       {/* Subtle texture image */}
       <div className="absolute inset-0 z-0">
         <Image

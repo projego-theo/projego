@@ -164,7 +164,7 @@ fbq('track','PageView');`,
 
       {/* ── Popup overlay ── */}
       {consent === null && (
-        <div className="fixed inset-0 z-[45] flex items-center justify-center p-4 bg-black/50 backdrop-blur-sm" style={{ WebkitBackdropFilter: 'blur(4px)' }}>
+        <div className="fixed inset-0 z-[45] flex items-center justify-center p-4 bg-black/60">
 
           {/* Étape 1 — Principal */}
           {step === 'main' && (

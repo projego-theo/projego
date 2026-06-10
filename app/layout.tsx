@@ -59,7 +59,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           src="https://beta.leadconnectorhq.com/loader.js"
           data-resources-url="https://beta.leadconnectorhq.com/chat-widget/loader.js"
           data-widget-id="6a18961b9f5b0cd19a61823a"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
       </body>
     </html>
