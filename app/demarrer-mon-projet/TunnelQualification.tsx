@@ -154,6 +154,7 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
     return () => {
       document.body.style.overflow = '';
       document.body.style.width = '';
+      document.documentElement.style.overflow = '';
       document.body.classList.remove('modal-open');
     };
   }, []);
@@ -348,7 +349,7 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
                     {villeOpen && villeSuggestions.length > 0 && (
                       <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
                         {villeSuggestions.map(v => (
-                          <button key={v.code} type="button" onClick={() => selectVille(v)} className="w-full text-left px-4 py-3 text-sm hover:bg-[#29abe2]/5 transition-colors flex items-center justify-between border-b border-gray-50 last:border-0">
+                          <button key={v.code} type="button" onMouseDown={() => selectVille(v)} className="w-full text-left px-4 py-3 text-sm hover:bg-[#29abe2]/5 transition-colors flex items-center justify-between border-b border-gray-50 last:border-0">
                             <span className="font-medium text-[#3d3d3d]">{v.nom}</span>
                             <span className="text-xs text-gray-400 ml-3 flex-shrink-0">{v.codesPostaux?.[0]} · Dép. {v.codeDepartement}</span>
                           </button>
@@ -383,7 +384,7 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
                     {adresseOpen && adresseSuggestions.length > 0 && (
                       <div className="absolute z-10 w-full mt-1 bg-white border border-gray-200 rounded-xl shadow-lg overflow-hidden">
                         {adresseSuggestions.map(f => (
-                          <button key={f.properties.id} type="button" onClick={() => selectAdresse(f)} className="w-full text-left px-4 py-3 text-sm hover:bg-[#29abe2]/5 transition-colors border-b border-gray-50 last:border-0">
+                          <button key={f.properties.id} type="button" onMouseDown={() => selectAdresse(f)} className="w-full text-left px-4 py-3 text-sm hover:bg-[#29abe2]/5 transition-colors border-b border-gray-50 last:border-0">
                             <span className="font-medium text-[#3d3d3d]">{f.properties.label}</span>
                           </button>
                         ))}

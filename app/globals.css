@@ -10,6 +10,8 @@
 html, body {
   overflow-x: hidden;
   max-width: 100vw;
+  width: 100%;
+  box-sizing: border-box;
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
 }
@@ -44,6 +46,11 @@ body.modal-open iframe[src*="msgsndr"] {
   display: none !important;
   visibility: hidden !important;
   pointer-events: none !important;
+}
+
+body.modal-open > div[style*="z-index"],
+body.modal-open iframe:not([title*="Projego"]) {
+  display: none !important;
 }
 
 /* Prose styles for blog content */

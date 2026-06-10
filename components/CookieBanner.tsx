@@ -183,14 +183,14 @@ fbq('track','PageView');`,
                 <button
                   onPointerDown={() => setStep('customize')}
                   style={{ touchAction: 'manipulation' }}
-                  className="flex-1 text-sm font-medium text-gray-500 border border-gray-200 hover:border-gray-400 hover:text-gray-700 px-4 py-2.5 rounded-full transition-colors"
+                  className="touch-manipulation flex-1 text-sm font-medium text-gray-500 border border-gray-200 hover:border-gray-400 hover:text-gray-700 px-4 py-2.5 rounded-full transition-colors"
                 >
                   Personnaliser
                 </button>
                 <button
                   onPointerDown={() => save({ stats: true, marketing: true })}
                   style={{ touchAction: 'manipulation' }}
-                  className="flex-1 text-sm font-semibold bg-[#29abe2] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors"
+                  className="touch-manipulation flex-1 text-sm font-semibold bg-[#29abe2] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors"
                 >
                   Tout accepter
                 </button>
@@ -249,14 +249,14 @@ fbq('track','PageView');`,
                 <button
                   onPointerDown={() => save({ stats: false, marketing: false })}
                   style={{ touchAction: 'manipulation' }}
-                  className="flex-1 text-sm font-medium text-gray-500 border border-gray-200 hover:border-gray-400 hover:text-gray-700 px-4 py-2.5 rounded-full transition-colors"
+                  className="touch-manipulation flex-1 text-sm font-medium text-gray-500 border border-gray-200 hover:border-gray-400 hover:text-gray-700 px-4 py-2.5 rounded-full transition-colors"
                 >
                   Tout refuser
                 </button>
                 <button
                   onPointerDown={() => save({ stats: statsToggle, marketing: marketingToggle })}
                   style={{ touchAction: 'manipulation' }}
-                  className="flex-1 text-sm font-semibold bg-[#29abe2] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors"
+                  className="touch-manipulation flex-1 text-sm font-semibold bg-[#29abe2] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors"
                 >
                   Autoriser la sélection
                 </button>
