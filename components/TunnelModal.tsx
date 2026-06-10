@@ -16,10 +16,16 @@ export default function TunnelModal() {
   const router = useRouter();
 
   useEffect(() => {
-    function handler() { setIsOpen(true); }
+    function handler() {
+      if (window.innerWidth < 1024) {
+        router.push('/demarrer-mon-projet');
+      } else {
+        setIsOpen(true);
+      }
+    }
     window.addEventListener('open-tunnel', handler);
     return () => window.removeEventListener('open-tunnel', handler);
-  }, []);
+  }, [router]);
 
   function handleClose() {
     setIsOpen(false);

@@ -5,6 +5,7 @@ import { departements, getDepartementBySlug } from '@/lib/departements';
 import { getOrGenerateContent } from '@/lib/generateContent';
 import { PageBackground } from '@/components/PageBackground';
 import AnimatedSection from '@/components/AnimatedSection';
+import StartProjectButton from '@/components/StartProjectButton';
 
 interface Params { params: Promise<{ dept: string }> }
 
@@ -95,9 +96,9 @@ export default async function PCDeptPage({ params }: Params) {
           <h2 className="text-2xl font-bold text-white mb-3">PC dans le {d.name} en 48-72h</h2>
           <p className="text-gray-300 mb-6 text-sm">Dossier complet, prêt à déposer en mairie.</p>
           <div className="flex flex-wrap gap-4 justify-center">
-            <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-8 py-3.5 rounded-full transition-all shadow-lg">
-              Nous contacter
-            </Link>
+            <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-8 py-3.5 rounded-full transition-all shadow-lg">
+              Démarrer mon projet
+            </StartProjectButton>
             <Link href="/permis-de-construire" className="inline-flex items-center gap-2 border-2 border-white/30 hover:border-white text-white font-semibold px-6 py-3.5 rounded-full transition-all">
               Retour au PC national
             </Link>

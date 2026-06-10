@@ -5,6 +5,7 @@ import AnimatedSection from '@/components/AnimatedSection';
 import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
 import { SectionCloud } from '@/components/SectionCloud';
+import StartProjectButton from '@/components/StartProjectButton';
 
 export const metadata: Metadata = {
   title: { absolute: 'À propos — Projego, anciennement TConseils' },
@@ -221,9 +222,9 @@ export default function AProposPage() {
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-[#1a1a1a] mb-4">Travaillons ensemble</h2>
           <p className="text-gray-600 mb-8">Vous avez un projet ? Racontez-nous. Nous vous proposons une étude gratuite et sans engagement.</p>
-          <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-10 py-4 rounded-full transition-all shadow-lg">
-            Nous contacter
-          </Link>
+          <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-10 py-4 rounded-full transition-all shadow-lg">
+            Démarrer mon projet
+          </StartProjectButton>
         </div>
       </section>
     </>

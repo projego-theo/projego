@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import AnimatedSection from '@/components/AnimatedSection';
 import PageHero from '@/components/PageHero';
+import StartProjectButton from '@/components/StartProjectButton';
 import { PageBackground } from '@/components/PageBackground';
 import { ServiceCTA } from '@/components/ServiceCTA';
 import { SectionCloud } from '@/components/SectionCloud';
@@ -90,9 +91,9 @@ export default function DeclarationPrealablePage() {
                 Un dossier incomplet entraîne des demandes de pièces complémentaires et des délais supplémentaires. <strong>Chez Projego, nous garantissons un dossier complet dès le premier dépôt.</strong>
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/contact" className="inline-flex items-center justify-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
-                  Nous contacter
-                </Link>
+                <StartProjectButton className="inline-flex items-center justify-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+                  Démarrer mon projet
+                </StartProjectButton>
                 <Link href="/blog/declaration-prealable-guide-complet" className="inline-flex items-center justify-center gap-2 border-2 border-gray-200 text-[#3d3d3d] font-semibold px-7 py-3.5 rounded-full hover:border-[#29abe2] transition-all">
                   Lire le guide complet
                 </Link>

@@ -122,7 +122,7 @@ function NextButton({ onClick, disabled }: { onClick: () => void; disabled?: boo
 
 // ── Main component ─────────────────────────────────────────────────────────────
 
-export default function TunnelQualification({ onClose }: { onClose: () => void }) {
+export default function TunnelQualification({ onClose, variant = 'modal' }: { onClose: () => void; variant?: 'modal' | 'page' }) {
   const [step, setStep] = useState(1);
   const [direction, setDirection] = useState(1);
 
@@ -147,8 +147,9 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
   // Hauteur du viewport visible (réduit quand le clavier mobile s'ouvre)
   const [vpHeight, setVpHeight] = useState<number | null>(null);
 
-  // Lock body scroll + classe modal-open (cache le widget GHL)
+  // Lock body scroll + classe modal-open (cache le widget GHL) — uniquement en mode modal
   useEffect(() => {
+    if (variant === 'page') return;
     document.body.style.overflow = 'hidden';
     document.body.classList.add('modal-open');
     return () => {
@@ -157,7 +158,7 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
       document.documentElement.style.overflow = '';
       document.body.classList.remove('modal-open');
     };
-  }, []);
+  }, [variant]);
 
   // Adapte la hauteur du panel au viewport visuel (clavier mobile iOS/Android)
   useEffect(() => {
@@ -277,30 +278,8 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
 
   // ── Render ─────────────────────────────────────────────────────────────────
 
-  return (
-    <div className="fixed inset-0 z-[60] overflow-y-auto">
-      {/* Backdrop */}
-      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
-
-      {/* Centering wrapper — px-4 = calc(100% - 32px) pour le panel */}
-      <div className="relative flex min-h-full items-end sm:items-center justify-center px-4 sm:py-8">
-
-      {/* Panel */}
-      <motion.div
-        initial={{ y: 60, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        exit={{ y: 60, opacity: 0 }}
-        transition={{ type: 'spring', damping: 28, stiffness: 320 }}
-        onClick={e => e.stopPropagation()}
-        className="relative w-full max-w-[600px] bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-screen sm:max-h-[88vh]"
-        style={{
-          boxSizing: 'border-box',
-          // visualViewport shrinks when mobile keyboard opens — keeps buttons visible
-          ...(vpHeight !== null && { maxHeight: `${vpHeight}px` }),
-        }}
-      >
-        {/* Header */}
-        <div className="flex-shrink-0 px-5 pt-5 pb-3 border-b border-gray-100">
+  const header = (
+    <div className="flex-shrink-0 px-5 pt-5 pb-3 border-b border-gray-100">
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-base font-bold text-[#3d3d3d]">Démarrez votre projet</h1>
             <button type="button" onClick={onClose} className="w-8 h-8 rounded-full bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors" aria-label="Fermer">
@@ -326,9 +305,10 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
             })}
           </div>
         </div>
+  );
 
-        {/* Scrollable content */}
-        <div className="flex-1 overflow-y-auto overflow-x-hidden px-5 py-5">
+  const content = (
+    <div className="flex-1 overflow-y-auto overflow-x-hidden px-5 py-5">
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div key={step} custom={direction} variants={slideVariants} initial="enter" animate="center" exit="exit" transition={slideTransition}>
 
@@ -553,8 +533,44 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
 
             </motion.div>
           </AnimatePresence>
+    </div>
+  );
+
+  if (variant === 'page') {
+    return (
+      <div className="max-w-2xl mx-auto px-4 py-8">
+        <div className="relative w-full bg-white rounded-2xl shadow-xl flex flex-col" style={{ boxSizing: 'border-box' }}>
+          {header}
+          {content}
         </div>
-      </motion.div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="fixed inset-0 z-[60] overflow-y-auto">
+      {/* Backdrop */}
+      <div className="fixed inset-0 bg-black/50 backdrop-blur-sm" onClick={onClose} />
+
+      {/* Centering wrapper — px-4 = calc(100% - 32px) pour le panel */}
+      <div className="relative flex min-h-full items-end sm:items-center justify-center px-4 sm:py-8">
+
+        {/* Panel */}
+        <motion.div
+          initial={{ y: 60, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          exit={{ y: 60, opacity: 0 }}
+          transition={{ type: 'spring', damping: 28, stiffness: 320 }}
+          onClick={e => e.stopPropagation()}
+          className="relative w-full max-w-[600px] bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-screen sm:max-h-[88vh]"
+          style={{
+            boxSizing: 'border-box',
+            ...(vpHeight !== null && { maxHeight: `${vpHeight}px` }),
+          }}
+        >
+          {header}
+          {content}
+        </motion.div>
       </div>{/* end centering wrapper */}
     </div>
   );

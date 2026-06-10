@@ -3,6 +3,7 @@ import { notFound } from 'next/navigation';
 import Link from 'next/link';
 import { getAllPostSlugs, getPostBySlug, getAllPostsMeta, formatDate } from '@/lib/blog';
 import ShareButtons from './ShareButtons';
+import StartProjectButton from '@/components/StartProjectButton';
 
 interface Params {
   params: Promise<{ slug: string }>;
@@ -80,9 +81,9 @@ export default async function BlogPostPage({ params }: Params) {
         <div className="mt-12 bg-[#3d3d3d] rounded-2xl p-8 text-white text-center">
           <h2 className="text-xl font-bold mb-2">Vous avez un projet ?</h2>
           <p className="text-gray-300 text-sm mb-5">Contactez Projego pour une étude de faisabilité gratuite. Réponse sous 24h.</p>
-          <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-bold px-7 py-3 rounded-full hover:bg-[#1a9fd6] transition-all text-sm">
-            Nous contacter
-          </Link>
+          <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-bold px-7 py-3 rounded-full hover:bg-[#1a9fd6] transition-all text-sm">
+            Démarrer mon projet
+          </StartProjectButton>
         </div>
 
         {/* Related articles */}

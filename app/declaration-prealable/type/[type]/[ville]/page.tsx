@@ -6,6 +6,7 @@ import { franceVilles, getFranceVilleBySlug } from '@/lib/franceVilles';
 import { getOrGenerateContent } from '@/lib/generateContent';
 import { PageBackground } from '@/components/PageBackground';
 import AnimatedSection from '@/components/AnimatedSection';
+import StartProjectButton from '@/components/StartProjectButton';
 
 interface Params { params: Promise<{ type: string; ville: string }> }
 
@@ -113,9 +114,9 @@ export default async function DPTypeVillePage({ params }: Params) {
           <p className="text-gray-300 mb-6 text-sm">
             Dossier complet, prêt à déposer en mairie de {v.name}, partout en France.
           </p>
-          <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-8 py-3.5 rounded-full transition-all shadow-lg">
-            Nous contacter
-          </Link>
+          <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-8 py-3.5 rounded-full transition-all shadow-lg">
+            Démarrer mon projet
+          </StartProjectButton>
         </div>
       </section>
     </>

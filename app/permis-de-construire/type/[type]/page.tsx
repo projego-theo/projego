@@ -6,6 +6,7 @@ import { franceVilles } from '@/lib/franceVilles';
 import { getOrGenerateContent } from '@/lib/generateContent';
 import { PageBackground } from '@/components/PageBackground';
 import AnimatedSection from '@/components/AnimatedSection';
+import StartProjectButton from '@/components/StartProjectButton';
 
 interface Params { params: Promise<{ type: string }> }
 
@@ -120,9 +121,9 @@ export default async function PCTypePage({ params }: Params) {
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-2xl font-bold text-white mb-3">Votre PC {t.name} en 48-72h</h2>
           <p className="text-gray-300 mb-6 text-sm">Dossier complet, prêt à déposer en mairie, partout en France.</p>
-          <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-8 py-3.5 rounded-full transition-all shadow-lg">
-            Nous contacter
-          </Link>
+          <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-8 py-3.5 rounded-full transition-all shadow-lg">
+            Démarrer mon projet
+          </StartProjectButton>
         </div>
       </section>
     </>

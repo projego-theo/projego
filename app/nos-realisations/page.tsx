@@ -7,6 +7,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedSection from '@/components/AnimatedSection';
 import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
+import StartProjectButton from '@/components/StartProjectButton';
 
 type Category = 'Tout' | 'Maisons neuves' | 'Extensions' | 'Rénovations' | 'Aménagements';
 
@@ -112,9 +113,9 @@ export default function NosRealisationsPage() {
           <AnimatedSection className="mt-16 text-center bg-white shadow-sm border border-gray-100 rounded-2xl p-10">
             <h2 className="text-2xl font-bold text-[#3d3d3d] mb-3">Votre projet sera notre prochaine réalisation</h2>
             <p className="text-gray-500 mb-6">Décrivez-nous votre projet, nous vous proposons une étude de faisabilité gratuite.</p>
-            <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-bold px-8 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
-              Nous contacter
-            </Link>
+            <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-bold px-8 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+              Démarrer mon projet
+            </StartProjectButton>
           </AnimatedSection>
         </div>
       </section>

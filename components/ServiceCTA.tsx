@@ -1,5 +1,5 @@
 import Image from 'next/image';
-import Link from 'next/link';
+import StartProjectButton from '@/components/StartProjectButton';
 
 interface ServiceCTAProps {
   title: string;
@@ -16,15 +16,12 @@ export function ServiceCTA({ title, description, photo, photoAlt }: ServiceCTAPr
           <div>
             <h2 className="text-3xl font-bold text-[#1a1a1a] mb-4">{title}</h2>
             <p className="text-gray-600 mb-8 leading-relaxed text-lg">{description}</p>
-            <Link
-              href="/contact"
-              className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-semibold px-8 py-4 rounded-full transition-all hover:-translate-y-0.5 shadow-lg"
-            >
-              Nous contacter
+            <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-semibold px-8 py-4 rounded-full transition-all hover:-translate-y-0.5 shadow-lg">
+              Démarrer mon projet
               <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
               </svg>
-            </Link>
+            </StartProjectButton>
           </div>
           <div className="relative h-72 lg:h-96 rounded-2xl overflow-hidden">
             <Image src={photo} alt={photoAlt ?? "Projego — maîtrise d'œuvre et démarches administratives en Vendée"} fill className="object-cover" />

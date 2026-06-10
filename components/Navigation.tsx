@@ -36,6 +36,16 @@ const servicesMenu = [
     type: 'B',
     subLinks: [],
   },
+  {
+    label: 'Espace Professionnel',
+    sublabel: 'Artisans BTP · Toute la France',
+    items: [
+      { href: '/espace-pro', label: 'DP & PC sous-traitance', desc: 'Confiez-nous les démarches de vos chantiers' },
+      { href: '/espace-pro', label: 'Croquis en plans', desc: 'Vos croquis transformés en plans exploitables' },
+    ],
+    type: 'PRO',
+    subLinks: [],
+  },
 ];
 
 export default function Navigation() {
@@ -103,15 +113,19 @@ export default function Navigation() {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[640px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
+                    className="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-[960px] bg-white rounded-2xl shadow-2xl border border-gray-100 overflow-hidden"
                   >
-                    <div className="grid grid-cols-2 divide-x divide-gray-100">
+                    <div className="grid grid-cols-3 divide-x divide-gray-100">
                       {servicesMenu.map((group) => (
                         <div key={group.label} className="p-6">
                           <div className="flex items-center gap-2 mb-1">
-                            <span className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 ${group.type === 'A' ? 'bg-[#29abe2]' : 'bg-[#3d3d3d]'}`}>
-                              {group.type}
-                            </span>
+                            {group.type === 'PRO' ? (
+                              <span className="text-xs bg-[#29abe2]/10 text-[#29abe2] px-2 py-0.5 rounded-full font-bold flex-shrink-0">PRO</span>
+                            ) : (
+                              <span className={`w-5 h-5 rounded-full flex items-center justify-center text-white text-xs font-bold flex-shrink-0 ${group.type === 'A' ? 'bg-[#29abe2]' : 'bg-[#3d3d3d]'}`}>
+                                {group.type}
+                              </span>
+                            )}
                             <p className="text-xs font-bold uppercase tracking-widest text-[#29abe2]">{group.label}</p>
                           </div>
                           <p className="text-xs text-gray-400 mb-4 pl-7">{group.sublabel}</p>
@@ -143,17 +157,6 @@ export default function Navigation() {
                         </div>
                       ))}
                     </div>
-                    <div className="bg-[#f4f6f8] px-6 py-3 border-t border-gray-100">
-                      <div className="flex items-center justify-between">
-                        <Link href="/espace-pro" className="flex items-center gap-2 text-sm font-semibold text-[#29abe2] hover:text-[#1a9fd6] transition-colors">
-                          <span className="text-xs bg-[#29abe2]/10 text-[#29abe2] px-2 py-0.5 rounded-full font-bold">PRO</span>
-                          Pour les Pros — Sous-traitance DP/PC &amp; Plans
-                          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-                          </svg>
-                        </Link>
-                      </div>
-                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -172,18 +175,13 @@ export default function Navigation() {
 
           {/* CTA buttons + Mobile toggle */}
           <div className="flex items-center gap-2">
-            <Link
-              href="/espace-pro"
-              className="hidden lg:inline-flex items-center gap-1.5 border-2 border-[#29abe2] text-[#29abe2] hover:bg-[#29abe2] hover:text-white text-sm font-semibold px-4 py-2 rounded-full transition-all"
-            >
-              Pour les Pros
-            </Link>
-            <Link
-              href="/contact"
+            <button
+              type="button"
+              onClick={() => window.dispatchEvent(new CustomEvent('open-tunnel'))}
               className="hidden lg:inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors shadow-md"
             >
-              Nous contacter
-            </Link>
+              Démarrer mon projet
+            </button>
             <button
               onClick={() => setMobileOpen(!mobileOpen)}
               className={`lg:hidden p-2 rounded-lg ${textColor}`}
@@ -234,23 +232,27 @@ export default function Navigation() {
                 <Link href="/suivi-de-chantier" className="block py-1.5 text-sm text-[#3d3d3d] hover:text-[#29abe2] pl-6">Suivi de chantier</Link>
               </div>
 
+              <div className="pt-2 pb-1">
+                <div className="flex items-center gap-2 mb-2">
+                  <span className="text-xs bg-[#29abe2]/10 text-[#29abe2] px-2 py-0.5 rounded-full font-bold">PRO</span>
+                  <p className="text-xs font-bold uppercase tracking-widest text-[#29abe2]">Espace Professionnel</p>
+                </div>
+                <Link href="/espace-pro" className="block py-1.5 text-sm text-[#3d3d3d] hover:text-[#29abe2] pl-6">DP &amp; PC sous-traitance</Link>
+                <Link href="/espace-pro" className="block py-1.5 text-sm text-[#3d3d3d] hover:text-[#29abe2] pl-6">Croquis en plans</Link>
+              </div>
+
               <Link href="/nos-realisations" className="block py-2 text-sm font-medium text-[#3d3d3d] hover:text-[#29abe2]">Réalisations</Link>
               <Link href="/blog" className="block py-2 text-sm font-medium text-[#3d3d3d] hover:text-[#29abe2]">Blog</Link>
               <Link href="/a-propos" className="block py-2 text-sm font-medium text-[#3d3d3d] hover:text-[#29abe2]">À propos</Link>
 
               <div className="pt-4 space-y-3">
-                <Link
-                  href="/espace-pro"
-                  className="block text-center border-2 border-[#29abe2] text-[#29abe2] text-sm font-semibold py-3 rounded-full"
+                <button
+                  type="button"
+                  onClick={() => { setMobileOpen(false); window.dispatchEvent(new CustomEvent('open-tunnel')); }}
+                  className="block w-full text-center bg-[#29abe2] text-white text-sm font-semibold py-3 rounded-full"
                 >
-                  Pour les Pros
-                </Link>
-                <Link
-                  href="/contact"
-                  className="block text-center bg-[#29abe2] text-white text-sm font-semibold py-3 rounded-full"
-                >
-                  Nous contacter
-                </Link>
+                  Démarrer mon projet
+                </button>
               </div>
             </div>
           </motion.div>

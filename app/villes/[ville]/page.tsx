@@ -5,6 +5,7 @@ import { cities, getCityBySlug } from '@/lib/cities';
 import { getCityDetail } from '@/lib/cityDetails';
 import AnimatedSection from '@/components/AnimatedSection';
 import { PageBackground } from '@/components/PageBackground';
+import StartProjectButton from '@/components/StartProjectButton';
 
 interface Params { params: Promise<{ ville: string }> }
 
@@ -128,9 +129,9 @@ export default async function VillePage({ params }: Params) {
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-3xl font-bold text-white mb-4">Votre projet à {city.name}</h2>
           <p className="text-gray-300 mb-8">Contactez Projego pour une étude de faisabilité gratuite. Réponse sous 24h.</p>
-          <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-10 py-4 rounded-full transition-all shadow-lg">
-            Nous contacter
-          </Link>
+          <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-10 py-4 rounded-full transition-all shadow-lg">
+            Démarrer mon projet
+          </StartProjectButton>
         </div>
       </section>
     </>

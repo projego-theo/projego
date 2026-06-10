@@ -5,6 +5,7 @@ import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
 import { ServiceCTA } from '@/components/ServiceCTA';
 import { SectionCloud } from '@/components/SectionCloud';
+import StartProjectButton from '@/components/StartProjectButton';
 
 export const metadata: Metadata = {
   title: 'Permis de Construire — Dossier complet en 48-72h',
@@ -88,9 +89,9 @@ export default function PermisDeConstrirePage() {
               <p className="text-gray-600 leading-relaxed mb-6">
                 Chez Projego, nous maîtrisons parfaitement les règles d&apos;urbanisme et constituons des dossiers <strong>complets, conformes et optimisés</strong> pour maximiser vos chances d&apos;obtenir une réponse favorable rapidement.
               </p>
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
-                Nous contacter
-              </Link>
+              <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+                Démarrer mon projet
+              </StartProjectButton>
             </AnimatedSection>
 
             <AnimatedSection direction="right">

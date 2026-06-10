@@ -176,18 +176,17 @@ export default function HeroSection() {
                   <Link
                     key={s.href}
                     href={s.href}
-                    className="rounded-xl p-3 transition-all duration-300"
-                    style={{
-                      backgroundColor: cardAActive ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.1)',
-                    }}
+                    className={`group relative rounded-xl p-3 pr-6 border border-transparent transition-all duration-200 hover:border-[#29abe2] hover:bg-white/25 ${cardAActive ? 'bg-white/15' : 'bg-white/10'}`}
                   >
                     <p className="font-semibold text-sm text-white">{s.title}</p>
                     <p
-                      className="text-xs mt-1 transition-colors duration-300"
-                      style={{ color: cardAActive ? 'rgba(255,255,255,0.7)' : 'rgba(41,171,226,0.7)' }}
+                      className={`text-xs mt-1 transition-colors duration-200 group-hover:text-white ${cardAActive ? 'text-white/70' : 'text-[#29abe2]/70'}`}
                     >
                       {s.delay}
                     </p>
+                    <svg className="absolute top-3 right-3 w-3.5 h-3.5 text-[#29abe2] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                    </svg>
                   </Link>
                 ))}
               </div>
@@ -251,12 +250,12 @@ export default function HeroSection() {
                   <Link
                     key={s.href}
                     href={s.href}
-                    className="rounded-xl p-3 transition-all duration-300"
-                    style={{
-                      backgroundColor: cardBActive ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.1)',
-                    }}
+                    className={`group relative rounded-xl p-3 pr-6 border border-transparent transition-all duration-200 hover:border-[#29abe2] hover:bg-white/25 ${cardBActive ? 'bg-white/15' : 'bg-white/10'}`}
                   >
                     <p className="text-white font-semibold text-sm">{s.title}</p>
+                    <svg className="absolute top-1/2 right-3 -translate-y-1/2 w-3.5 h-3.5 text-[#29abe2] opacity-0 -translate-x-1 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-200" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2.5} d="M9 5l7 7-7 7" />
+                    </svg>
                   </Link>
                 ))}
               </div>
