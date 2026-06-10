@@ -175,10 +175,16 @@ export default function Navigation() {
 
           {/* CTA buttons + Mobile toggle */}
           <div className="flex items-center gap-2">
+            <Link
+              href="/contact"
+              className={`hidden lg:inline-flex items-center gap-2 border-2 ${transparent ? 'border-white text-white hover:bg-white hover:text-[#1a1a2e]' : 'border-[#3d3d3d] text-[#3d3d3d] hover:bg-[#3d3d3d] hover:text-white'} text-sm font-semibold px-5 py-2.5 rounded-full transition-colors`}
+            >
+              Nous contacter
+            </Link>
             <button
               type="button"
               onClick={() => window.dispatchEvent(new CustomEvent('open-tunnel'))}
-              className="hidden lg:inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors shadow-md"
+              className="hidden lg:inline-flex items-center gap-2 cursor-pointer bg-[#29abe2] hover:bg-[#1a9fd6] text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors shadow-md"
             >
               Démarrer mon projet
             </button>
@@ -249,7 +255,7 @@ export default function Navigation() {
                 <button
                   type="button"
                   onClick={() => { setMobileOpen(false); window.dispatchEvent(new CustomEvent('open-tunnel')); }}
-                  className="block w-full text-center bg-[#29abe2] text-white text-sm font-semibold py-3 rounded-full"
+                  className="block w-full text-center cursor-pointer bg-[#29abe2] text-white text-sm font-semibold py-3 rounded-full"
                 >
                   Démarrer mon projet
                 </button>

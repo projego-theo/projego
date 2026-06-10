@@ -9,7 +9,7 @@ export default function StartProjectButton({ className, children }: { className?
     <button
       type="button"
       onClick={() => window.dispatchEvent(new CustomEvent('open-tunnel'))}
-      className={className ?? DEFAULT_CLASSNAME}
+      className={`cursor-pointer ${className ?? DEFAULT_CLASSNAME}`}
     >
       {children ?? (
         <>
