@@ -43,6 +43,7 @@ export default function CookieBanner() {
   // null = pas de choix enregistré → afficher le popup
   // object = choix enregistré → charger les scripts
   const [consent, setConsent] = useState<ConsentPrefs | null | undefined>(undefined);
+  const [showBanner, setShowBanner] = useState(false);
   const [step, setStep] = useState<'main' | 'customize'>('main');
   const [statsToggle, setStatsToggle] = useState(true);
   const [marketingToggle, setMarketingToggle] = useState(true);
@@ -66,9 +67,25 @@ export default function CookieBanner() {
     }
   }, []);
 
+  // Afficher le popup uniquement une fois la page entièrement chargée
+  useEffect(() => {
+    if (consent !== null) return;
+
+    if (document.readyState === 'complete') {
+      setShowBanner(true);
+      return;
+    }
+
+    function handleLoad() {
+      setShowBanner(true);
+    }
+    window.addEventListener('load', handleLoad);
+    return () => window.removeEventListener('load', handleLoad);
+  }, [consent]);
+
   // Bloquer le scroll pendant que le popup est visible
   useEffect(() => {
-    if (consent === null) {
+    if (showBanner) {
       document.body.style.overflow = 'hidden';
     } else {
       document.body.style.overflow = '';
@@ -76,7 +93,7 @@ export default function CookieBanner() {
     return () => {
       document.body.style.overflow = '';
     };
-  }, [consent]);
+  }, [showBanner]);
 
   function save(prefs: ConsentPrefs) {
     localStorage.setItem('cookie-consent', JSON.stringify(prefs));
@@ -163,7 +180,7 @@ fbq('track','PageView');`,
       )}
 
       {/* ── Popup overlay ── */}
-      {consent === null && (
+      {consent === null && showBanner && (
         <div className="fixed inset-0 z-[45] flex items-center justify-center p-4 bg-black/60">
 
           {/* Étape 1 — Principal */}
@@ -175,7 +192,7 @@ fbq('track','PageView');`,
               </p>
               <Link
                 href="/politique-cookies"
-                className="text-xs text-[#29abe2] hover:underline mt-1 mb-5 inline-block"
+                className="text-xs text-[#1a8fc0] hover:underline mt-1 mb-5 inline-block"
               >
                 En savoir plus
               </Link>
@@ -190,7 +207,7 @@ fbq('track','PageView');`,
                 <button
                   onPointerDown={() => save({ stats: true, marketing: true })}
                   style={{ touchAction: 'manipulation' }}
-                  className="touch-manipulation flex-1 text-sm font-semibold bg-[#29abe2] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors"
+                  className="touch-manipulation flex-1 text-sm font-semibold bg-[#1a8fc0] hover:bg-[#1a9fd6] text-white px-4 py-2.5 rounded-full transition-colors"
                 >
                   Tout accepter
                 </button>

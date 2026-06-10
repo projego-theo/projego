@@ -184,7 +184,7 @@ export default function Navigation() {
             <button
               type="button"
               onClick={() => window.dispatchEvent(new CustomEvent('open-tunnel'))}
-              className="hidden lg:inline-flex items-center gap-2 cursor-pointer bg-[#29abe2] hover:bg-[#1a9fd6] text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors shadow-md"
+              className="hidden lg:inline-flex items-center gap-2 cursor-pointer bg-[#1a8fc0] hover:bg-[#1a9fd6] text-white text-sm font-semibold px-5 py-2.5 rounded-full transition-colors shadow-md"
             >
               Démarrer mon projet
             </button>
@@ -255,7 +255,7 @@ export default function Navigation() {
                 <button
                   type="button"
                   onClick={() => { setMobileOpen(false); window.dispatchEvent(new CustomEvent('open-tunnel')); }}
-                  className="block w-full text-center cursor-pointer bg-[#29abe2] text-white text-sm font-semibold py-3 rounded-full"
+                  className="block w-full text-center cursor-pointer bg-[#1a8fc0] text-white text-sm font-semibold py-3 rounded-full"
                 >
                   Démarrer mon projet
                 </button>
