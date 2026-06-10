@@ -16,6 +16,15 @@ body {
   font-family: var(--font-inter), 'Inter', system-ui, Arial, sans-serif;
 }
 
+/* Cache le widget chat GHL quand le modal tunnel est ouvert */
+body.modal-open .hl-chat-widget,
+body.modal-open [data-widget-id],
+body.modal-open #LeadConnector-chat-widget,
+body.modal-open [class*="hl-chat"],
+body.modal-open [id*="hl-chat"] {
+  display: none !important;
+}
+
 /* Prose styles for blog content */
 .prose {
   --tw-prose-body: #3d3d3d;

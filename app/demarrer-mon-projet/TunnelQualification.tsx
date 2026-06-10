@@ -144,10 +144,27 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
   const [autreMode, setAutreMode] = useState<{ type: 'dp' | 'pc' } | null>(null);
   const [autreTexte, setAutreTexte] = useState('');
 
-  // Lock body scroll
+  // Hauteur du viewport visible (réduit quand le clavier mobile s'ouvre)
+  const [vpHeight, setVpHeight] = useState<number | null>(null);
+
+  // Lock body scroll + classe modal-open (cache le widget GHL)
   useEffect(() => {
     document.body.style.overflow = 'hidden';
-    return () => { document.body.style.overflow = ''; };
+    document.body.classList.add('modal-open');
+    return () => {
+      document.body.style.overflow = '';
+      document.body.classList.remove('modal-open');
+    };
+  }, []);
+
+  // Adapte la hauteur du panel au viewport visuel (clavier mobile iOS/Android)
+  useEffect(() => {
+    const vp = window.visualViewport;
+    if (!vp) return;
+    const update = () => setVpHeight(Math.round(vp.height));
+    vp.addEventListener('resize', update);
+    update(); // valeur initiale
+    return () => vp.removeEventListener('resize', update);
   }, []);
 
   // Close on Escape
@@ -274,7 +291,11 @@ export default function TunnelQualification({ onClose }: { onClose: () => void }
         transition={{ type: 'spring', damping: 28, stiffness: 320 }}
         onClick={e => e.stopPropagation()}
         className="relative w-full max-w-[600px] bg-white rounded-t-3xl sm:rounded-2xl shadow-2xl flex flex-col max-h-screen sm:max-h-[88vh]"
-        style={{ boxSizing: 'border-box' }}
+        style={{
+          boxSizing: 'border-box',
+          // visualViewport shrinks when mobile keyboard opens — keeps buttons visible
+          ...(vpHeight !== null && { maxHeight: `${vpHeight}px` }),
+        }}
       >
         {/* Header */}
         <div className="flex-shrink-0 px-5 pt-5 pb-3 border-b border-gray-100">
