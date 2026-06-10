@@ -21,6 +21,9 @@ export const metadata: Metadata = {
   description:
     "Projego gère vos démarches administratives (DP, PC) partout en France en 24-72h, et votre maîtrise d'œuvre en Vendée. Basé à Beaurepaire (85).",
   metadataBase: new URL('https://www.projego.fr'),
+  alternates: {
+    canonical: 'https://www.projego.fr',
+  },
   openGraph: {
     type: 'website',
     locale: 'fr_FR',

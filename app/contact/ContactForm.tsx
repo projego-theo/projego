@@ -111,11 +111,12 @@ export default function ContactForm() {
 
       {/* Téléphone */}
       <div>
-        <label htmlFor="phone" className="block text-sm font-semibold text-[#3d3d3d] mb-1.5">Téléphone <span className="text-gray-400 font-normal">(facultatif)</span></label>
+        <label htmlFor="phone" className="block text-sm font-semibold text-[#3d3d3d] mb-1.5">Téléphone *</label>
         <input
           id="phone"
           name="phone"
           type="tel"
+          required
           placeholder="06 12 34 56 78"
           className="w-full bg-[#f8fafc] border border-gray-200 rounded-xl px-4 py-3 text-[#3d3d3d] text-sm focus:outline-none focus:ring-2 focus:ring-[#29abe2] focus:border-transparent transition-all"
         />
