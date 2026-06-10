@@ -128,14 +128,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <>
               <Script
                 id="ga4-init"
-                strategy="afterInteractive"
+                strategy="lazyOnload"
                 dangerouslySetInnerHTML={{
                   __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','${GA4_ID}');`,
                 }}
               />
               <Script
                 src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}
-                strategy="afterInteractive"
+                strategy="lazyOnload"
               />
             </>
           )}
@@ -145,14 +145,14 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
             <>
               <Script
                 id="ga4-anon"
-                strategy="afterInteractive"
+                strategy="lazyOnload"
                 dangerouslySetInnerHTML={{
                   __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('consent','default',{'analytics_storage':'granted','ad_storage':'denied','functionality_storage':'denied','personalization_storage':'denied'});gtag('js',new Date());gtag('config','${GA4_ID}',{'anonymize_ip':true});`,
                 }}
               />
               <Script
                 src={`https://www.googletagmanager.com/gtag/js?id=${GA4_ID}`}
-                strategy="afterInteractive"
+                strategy="lazyOnload"
               />
             </>
           )}
@@ -161,7 +161,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
           {consent.marketing && (
             <Script
               id="meta-pixel"
-              strategy="afterInteractive"
+              strategy="lazyOnload"
               dangerouslySetInnerHTML={{
                 __html: `!function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
