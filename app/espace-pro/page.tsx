@@ -1,8 +1,6 @@
 'use client';
 
 import Link from 'next/link';
-import { useState } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
 import AnimatedSection from '@/components/AnimatedSection';
 import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
@@ -90,62 +88,17 @@ const profiles = [
   { icon: '🔧', title: 'Plombiers & Électriciens', desc: "Changements de destination, annexes habitables — nous constituons le dossier pour vous." },
 ];
 
-function PdfLightbox({ pdf, label, onClose }: { pdf: string; label: string; onClose: () => void }) {
-  return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      animate={{ opacity: 1 }}
-      exit={{ opacity: 0 }}
-      transition={{ duration: 0.2 }}
-      className="fixed inset-0 z-50 flex items-center justify-center p-4"
-      style={{ backgroundColor: 'rgba(0,0,0,0.9)' }}
-      onClick={onClose}
-    >
-      <motion.div
-        initial={{ scale: 0.92, opacity: 0 }}
-        animate={{ scale: 1, opacity: 1 }}
-        exit={{ scale: 0.92, opacity: 0 }}
-        transition={{ duration: 0.2 }}
-        className="relative w-full max-w-5xl flex flex-col"
-        style={{ height: '90vh' }}
-        onClick={(e) => e.stopPropagation()}
-      >
-        <button
-          onClick={onClose}
-          className="absolute -top-10 right-0 z-10 w-8 h-8 bg-white/20 hover:bg-white/40 text-white rounded-full flex items-center justify-center transition-colors"
-          aria-label="Fermer"
-        >
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
-          </svg>
-        </button>
-        <p className="text-white/60 text-xs text-center mb-2">{label}</p>
-        <iframe
-          src={pdf}
-          className="w-full flex-1 rounded-xl border-0"
-          title={label}
-        />
-      </motion.div>
-    </motion.div>
-  );
-}
-
 function ExampleButton({ pdf, label }: { pdf: string; label: string }) {
-  const [open, setOpen] = useState(false);
-
   return (
-    <>
-      <button
-        className="text-xs text-[#29abe2] underline underline-offset-2 hover:text-[#1a9fd6] transition-colors"
-        onClick={() => setOpen(true)}
-        type="button"
-      >
-        Voir un exemple →
-      </button>
-      <AnimatePresence>
-        {open && <PdfLightbox pdf={pdf} label={label} onClose={() => setOpen(false)} />}
-      </AnimatePresence>
-    </>
+    <a
+      href={pdf}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={label}
+      className="text-xs text-[#29abe2] underline underline-offset-2 hover:text-[#1a9fd6] transition-colors"
+    >
+      Voir un exemple →
+    </a>
   );
 }
 
