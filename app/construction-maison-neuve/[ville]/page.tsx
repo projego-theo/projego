@@ -72,9 +72,9 @@ export default async function ConstructionVillePage({ params }: Params) {
               <p className="text-gray-600 leading-relaxed mb-6">
                 Nous analysons le PLU de {city.name}, concevons les plans, obtenons le permis de construire et coordonnons les entreprises locales.
               </p>
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+              <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                 Premier rendez-vous gratuit
-              </Link>
+              </StartProjectButton>
             </AnimatedSection>
 
             <AnimatedSection direction="right">

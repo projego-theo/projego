@@ -84,9 +84,9 @@ export default async function PCDeptPage({ params }: Params) {
                 <p className="text-xs text-gray-500 mt-1">Distanciel</p>
               </div>
             </div>
-            <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+            <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
               Démarrer mon dossier
-            </Link>
+            </StartProjectButton>
           </AnimatedSection>
         </div>
       </section>

@@ -60,9 +60,9 @@ export default function AProposPage() {
                 Basés à <strong>Beaurepaire (85)</strong>, en Vendée, nous accompagnons particuliers et professionnels dans leurs projets de construction, d&apos;extension et de rénovation, en prenant en charge à la fois les <strong>démarches administratives</strong> (déclaration préalable, permis de construire — partout en France) et la <strong>maîtrise d&apos;œuvre</strong> locale (Vendée, 30 km autour des Herbiers).
               </p>
               <div className="flex flex-wrap gap-4 mt-6">
-                <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+                <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                   Prendre contact
-                </Link>
+                </StartProjectButton>
                 <Link href="/nos-realisations" className="inline-flex items-center gap-2 border-2 border-gray-200 text-[#3d3d3d] font-semibold px-7 py-3.5 rounded-full hover:border-[#29abe2] transition-all">
                   Voir nos réalisations
                 </Link>

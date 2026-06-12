@@ -39,7 +39,11 @@
       "Bash(openssl rand *)",
       "Bash(curl -s -o /dev/null -w \"HTTP %{http_code}\\\\n\" -X POST http://localhost:3099/mcp -H \"Content-Type: application/json\" -H \"Accept: application/json, text/event-stream\" -d '{\"jsonrpc\":\"2.0\",\"id\":1,\"method\":\"initialize\",\"params\":{\"protocolVersion\":\"2024-11-05\",\"capabilities\":{},\"clientInfo\":{\"name\":\"test\",\"version\":\"1.0\"}}}')",
       "Read(//Users/theo/Documents/meta-mcp-server/**)",
-      "Bash(grep -E \"^dotenv$\")"
+      "Bash(grep -E \"^dotenv$\")",
+      "Bash(/usr/bin/git status *)",
+      "Bash(/usr/bin/git ls-files *)",
+      "Bash(git --version)",
+      "Bash(echo \"EXIT=$?\")"
     ]
   }
 }

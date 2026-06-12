@@ -6,6 +6,7 @@ import { proPages, getProPageBySlug } from '@/lib/proMetiers';
 import { getOrGenerateContent } from '@/lib/generateContent';
 import { PageBackground } from '@/components/PageBackground';
 import AnimatedSection from '@/components/AnimatedSection';
+import StartProjectButton from '@/components/StartProjectButton';
 
 interface Params { params: Promise<{ slug: string }> }
 
@@ -109,9 +110,9 @@ export default async function ProPage({ params }: Params) {
                   </div>
                 ))}
               </div>
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+              <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                 Envoyer une demande
-              </Link>
+              </StartProjectButton>
             </AnimatedSection>
 
             <AnimatedSection direction="right">
@@ -163,9 +164,9 @@ export default async function ProPage({ params }: Params) {
         <div className="max-w-3xl mx-auto px-4 text-center">
           <h2 className="text-2xl font-bold text-white mb-3">Travaillons ensemble</h2>
           <p className="text-gray-300 mb-6 text-sm">Contactez-nous pour discuter de vos besoins. Devis rapide, sans engagement.</p>
-          <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-8 py-3.5 rounded-full transition-all shadow-lg">
+          <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-8 py-3.5 rounded-full transition-all shadow-lg">
             Envoyer une demande pro
-          </Link>
+          </StartProjectButton>
         </div>
       </section>
     </>

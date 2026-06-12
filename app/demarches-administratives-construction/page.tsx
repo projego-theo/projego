@@ -5,6 +5,7 @@ import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
 import { ServiceCTA } from '@/components/ServiceCTA';
 import { SectionCloud } from '@/components/SectionCloud';
+import StartProjectButton from '@/components/StartProjectButton';
 
 export const metadata: Metadata = {
   title: "Démarches Administratives Construction — Accompagnement Complet, toute la France",
@@ -195,9 +196,9 @@ export default function DemarchesAdministrativesPage() {
               <p className="text-gray-600 leading-relaxed mb-6">
                 Vous nous décrivez votre projet. On gère le reste — de l&apos;analyse de faisabilité à la livraison du dossier complet.
               </p>
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+              <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                 Étude gratuite de mon projet
-              </Link>
+              </StartProjectButton>
             </AnimatedSection>
 
             <AnimatedSection direction="right">

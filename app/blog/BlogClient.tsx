@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import AnimatedSection from '@/components/AnimatedSection';
+import StartProjectButton from '@/components/StartProjectButton';
 
 interface BlogPostMeta {
   slug: string;
@@ -165,9 +166,9 @@ export default function BlogClient({ posts }: { posts: BlogPostMeta[] }) {
           <p className="text-gray-600 mb-6 max-w-lg mx-auto">
             Ces guides vous ont été utiles ? N&apos;hésitez pas à nous contacter pour discuter de votre projet. Premier rendez-vous gratuit.
           </p>
-          <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-bold px-8 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+          <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-bold px-8 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
             Prendre contact
-          </Link>
+          </StartProjectButton>
         </AnimatedSection>
       </div>
     </section>

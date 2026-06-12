@@ -99,9 +99,9 @@ export default async function DPTypeVillePage({ params }: Params) {
                 </div>
               ))}
             </div>
-            <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+            <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
               Démarrer mon dossier à {v.name}
-            </Link>
+            </StartProjectButton>
           </AnimatedSection>
         </div>
       </section>

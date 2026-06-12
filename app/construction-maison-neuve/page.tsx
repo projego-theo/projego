@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import AnimatedSection from '@/components/AnimatedSection';
 import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
 import { ServiceCTA } from '@/components/ServiceCTA';
 import { SectionCloud } from '@/components/SectionCloud';
+import StartProjectButton from '@/components/StartProjectButton';
 
 export const metadata: Metadata = {
   title: 'Construction Maison Neuve Vendée — Plans sur mesure',
@@ -71,9 +71,9 @@ export default function ConstructionMaisonNeuvePage() {
                 <p className="text-sm font-bold text-[#3d3d3d] mb-1">Seuil d&apos;intervention</p>
                 <p className="text-gray-500 text-sm">Nous intervenons sans architecte pour les maisons jusqu&apos;à <strong>150 m² de surface de plancher</strong>. Au-delà, nous collaborons avec des architectes partenaires.</p>
               </div>
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+              <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                 Un besoin ? Contactez-nous
-              </Link>
+              </StartProjectButton>
             </AnimatedSection>
 
             <AnimatedSection direction="right">

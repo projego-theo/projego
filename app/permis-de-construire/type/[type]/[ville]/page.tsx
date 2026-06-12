@@ -93,9 +93,9 @@ export default async function PCTypeVillePage({ params }: Params) {
               ))}
             </div>
             <div className="flex flex-wrap gap-4">
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+              <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                 Démarrer mon dossier
-              </Link>
+              </StartProjectButton>
               <Link href={`/permis-de-construire/type/${t.slug}`} className="inline-flex items-center gap-2 border-2 border-gray-200 text-[#3d3d3d] font-semibold px-6 py-3.5 rounded-full hover:border-[#29abe2] transition-all text-sm">
                 PC {t.name} — toute la France
               </Link>

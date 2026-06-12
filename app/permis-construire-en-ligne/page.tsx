@@ -5,6 +5,7 @@ import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
 import { ServiceCTA } from '@/components/ServiceCTA';
 import { SectionCloud } from '@/components/SectionCloud';
+import StartProjectButton from '@/components/StartProjectButton';
 
 export const metadata: Metadata = {
   title: 'Permis de Construire en Ligne — Dossier complet 48-72h, toute la France',
@@ -144,9 +145,9 @@ export default function PermisEnLignePage() {
               <p className="text-gray-600 leading-relaxed mb-6">
                 Pour les projets dont la surface de plancher dépasse 150 m², nous mobilisons l&apos;un de nos <strong>architectes DPLG partenaires</strong> — sans démarche supplémentaire de votre côté.
               </p>
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+              <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                 Démarrer mon dossier
-              </Link>
+              </StartProjectButton>
             </AnimatedSection>
 
             <AnimatedSection direction="right">

@@ -5,6 +5,7 @@ import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
 import { ServiceCTA } from '@/components/ServiceCTA';
 import { SectionCloud } from '@/components/SectionCloud';
+import StartProjectButton from '@/components/StartProjectButton';
 
 export const metadata: Metadata = {
   title: 'Déclaration Préalable en Ligne — Dossier complet 24-48h, toute la France',
@@ -146,9 +147,9 @@ export default function DPEnLignePage() {
                 Résultat : un dossier solide en 24-48h, depuis n&apos;importe quelle commune de France — sans que vous ayez à vous déplacer ni à interpréter les règles d&apos;urbanisme locales.
               </p>
               <div className="flex flex-col sm:flex-row gap-4">
-                <Link href="/contact" className="inline-flex items-center justify-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+                <StartProjectButton className="inline-flex items-center justify-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                   Démarrer mon dossier
-                </Link>
+                </StartProjectButton>
                 <Link href="/declaration-prealable" className="inline-flex items-center justify-center gap-2 border-2 border-gray-200 text-[#3d3d3d] font-semibold px-7 py-3.5 rounded-full hover:border-[#29abe2] transition-all">
                   En savoir plus sur la DP
                 </Link>

@@ -1,10 +1,10 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import AnimatedSection from '@/components/AnimatedSection';
 import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
 import { ServiceCTA } from '@/components/ServiceCTA';
 import { SectionCloud } from '@/components/SectionCloud';
+import StartProjectButton from '@/components/StartProjectButton';
 
 export const metadata: Metadata = {
   title: "Rénovation Maison et Appartement Vendée",
@@ -63,9 +63,9 @@ export default function RenovationMaisonPage() {
               <p className="text-gray-600 leading-relaxed mb-6">
                 Projego assure la <strong>maîtrise d&apos;œuvre de votre rénovation</strong> : diagnostic de l&apos;existant, conception du projet, consultation des entreprises et suivi de chantier.
               </p>
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+              <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                 Discuter de mon projet
-              </Link>
+              </StartProjectButton>
             </AnimatedSection>
 
             <AnimatedSection direction="right">

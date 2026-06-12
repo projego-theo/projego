@@ -5,6 +5,7 @@ import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
 import { ServiceCTA } from '@/components/ServiceCTA';
 import { SectionCloud } from '@/components/SectionCloud';
+import StartProjectButton from '@/components/StartProjectButton';
 
 export const metadata: Metadata = {
   title: "Autoconstruction Maison — Permis de Construire & Démarches pris en charge",
@@ -156,9 +157,9 @@ export default function AutoconstructionPage() {
               <p className="text-gray-600 leading-relaxed mb-6">
                 Si votre surface dépasse 150 m², on mobilise l&apos;un de nos <strong>architectes DPLG partenaires</strong>. Pas de recherche de votre côté : on gère le lien.
               </p>
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+              <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                 Démarrer mon dossier
-              </Link>
+              </StartProjectButton>
             </AnimatedSection>
 
             <AnimatedSection direction="right">

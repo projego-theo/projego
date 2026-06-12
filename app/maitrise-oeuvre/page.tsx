@@ -5,6 +5,7 @@ import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
 import { ServiceCTA } from '@/components/ServiceCTA';
 import { SectionCloud } from '@/components/SectionCloud';
+import StartProjectButton from '@/components/StartProjectButton';
 
 export const metadata: Metadata = {
   title: "Maîtrise d'œuvre en Vendée — Conception et suivi de projet",
@@ -188,9 +189,9 @@ export default function MaitriseOeuvrePage() {
                 ))}
                 <span className="text-xs bg-[#29abe2]/10 text-[#29abe2] px-3 py-1.5 rounded-full font-semibold">+30 communes</span>
               </div>
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+              <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                 Vérifier si vous êtes dans la zone
-              </Link>
+              </StartProjectButton>
             </AnimatedSection>
 
             <AnimatedSection direction="right">

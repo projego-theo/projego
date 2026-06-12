@@ -1,9 +1,9 @@
 import type { Metadata } from 'next';
-import Link from 'next/link';
 import AnimatedSection from '@/components/AnimatedSection';
 import PageHero from '@/components/PageHero';
 import { PageBackground } from '@/components/PageBackground';
 import { ServiceCTA } from '@/components/ServiceCTA';
+import StartProjectButton from '@/components/StartProjectButton';
 
 export const metadata: Metadata = {
   title: 'Suivi de Chantier Vendée',
@@ -62,9 +62,9 @@ export default function SuiviChantierPage() {
                 <p className="text-sm font-bold text-[#3d3d3d] mb-1">Service optionnel</p>
                 <p className="text-gray-500 text-sm">Le suivi de chantier peut être ajouté à notre mission de conception, ou commandé de façon indépendante si vous avez déjà vos plans et vos entreprises.</p>
               </div>
-              <Link href="/contact" className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
+              <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
                 Me renseigner sur cette option
-              </Link>
+              </StartProjectButton>
             </AnimatedSection>
 
             <AnimatedSection direction="right">
