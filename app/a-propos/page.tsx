@@ -61,7 +61,7 @@ export default function AProposPage() {
               </p>
               <div className="flex flex-wrap gap-4 mt-6">
                 <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
-                  Prendre contact
+                  Démarrer mon projet
                 </StartProjectButton>
                 <Link href="/nos-realisations" className="inline-flex items-center gap-2 border-2 border-gray-200 text-[#3d3d3d] font-semibold px-7 py-3.5 rounded-full hover:border-[#29abe2] transition-all">
                   Voir nos réalisations

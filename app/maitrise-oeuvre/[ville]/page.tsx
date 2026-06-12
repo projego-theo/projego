@@ -108,7 +108,7 @@ export default async function MOeVillePage({ params }: Params) {
           <h2 className="text-2xl font-bold text-white mb-3">Votre projet à {city.name}</h2>
           <p className="text-gray-300 mb-6 text-sm">Premier rendez-vous gratuit. Étude de faisabilité et devis personnalisé.</p>
           <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] hover:bg-[#1a9fd6] text-white font-bold px-8 py-3.5 rounded-full transition-all shadow-lg">
-            Prendre rendez-vous
+            Démarrer mon projet
           </StartProjectButton>
         </div>
       </section>

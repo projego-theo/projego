@@ -63,7 +63,7 @@ export default function SuiviChantierPage() {
                 <p className="text-gray-500 text-sm">Le suivi de chantier peut être ajouté à notre mission de conception, ou commandé de façon indépendante si vous avez déjà vos plans et vos entreprises.</p>
               </div>
               <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
-                Me renseigner sur cette option
+                Démarrer mon projet
               </StartProjectButton>
             </AnimatedSection>
 

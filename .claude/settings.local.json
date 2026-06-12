@@ -43,7 +43,8 @@
       "Bash(/usr/bin/git status *)",
       "Bash(/usr/bin/git ls-files *)",
       "Bash(git --version)",
-      "Bash(echo \"EXIT=$?\")"
+      "Bash(echo \"EXIT=$?\")",
+      "Bash(grep -v \"^--$\")"
     ]
   }
 }

@@ -190,7 +190,7 @@ export default function MaitriseOeuvrePage() {
                 <span className="text-xs bg-[#29abe2]/10 text-[#29abe2] px-3 py-1.5 rounded-full font-semibold">+30 communes</span>
               </div>
               <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
-                Vérifier si vous êtes dans la zone
+                Démarrer mon projet
               </StartProjectButton>
             </AnimatedSection>
 

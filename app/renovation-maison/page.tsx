@@ -64,7 +64,7 @@ export default function RenovationMaisonPage() {
                 Projego assure la <strong>maîtrise d&apos;œuvre de votre rénovation</strong> : diagnostic de l&apos;existant, conception du projet, consultation des entreprises et suivi de chantier.
               </p>
               <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
-                Discuter de mon projet
+                Démarrer mon projet
               </StartProjectButton>
             </AnimatedSection>
 

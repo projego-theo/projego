@@ -72,7 +72,7 @@ export default function ConstructionMaisonNeuvePage() {
                 <p className="text-gray-500 text-sm">Nous intervenons sans architecte pour les maisons jusqu&apos;à <strong>150 m² de surface de plancher</strong>. Au-delà, nous collaborons avec des architectes partenaires.</p>
               </div>
               <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-semibold px-7 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
-                Un besoin ? Contactez-nous
+                Démarrer mon projet
               </StartProjectButton>
             </AnimatedSection>
 

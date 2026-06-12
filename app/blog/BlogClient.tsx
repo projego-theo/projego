@@ -167,7 +167,7 @@ export default function BlogClient({ posts }: { posts: BlogPostMeta[] }) {
             Ces guides vous ont été utiles ? N&apos;hésitez pas à nous contacter pour discuter de votre projet. Premier rendez-vous gratuit.
           </p>
           <StartProjectButton className="inline-flex items-center gap-2 bg-[#29abe2] text-white font-bold px-8 py-3.5 rounded-full hover:bg-[#1a9fd6] transition-all">
-            Prendre contact
+            Démarrer mon projet
           </StartProjectButton>
         </AnimatedSection>
       </div>
